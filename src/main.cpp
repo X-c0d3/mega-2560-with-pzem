@@ -1,9 +1,12 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <DHTesp.h>
 #include <HardwareSerial.h>
 #include <PZEM004Tv30.h>
 #include <PZEM017.h>
 #include <SoftwareSerial.h>
+
+#include "config.h"
 
 // For Mega 2560 Pro Hardware Serial
 // Hardware Serial0  =  1: RX0,   0: TX0
@@ -13,15 +16,15 @@
 
 PZEM017 pzem017(&Serial1);
 PZEM004Tv30 pzem04t(&Serial2);
-
-#define DEFAULT_BAUD_RATE 115200
-#define HIGHT_VOLTAGE 15.10
-#define LOW_VOLTAGE 10.50
+DHTesp dht;
+//WireSerial (RX/TX) - Cable
+SoftwareSerial wireSerial(11, 10);
 
 void setup() {
     Serial.begin(DEFAULT_BAUD_RATE);
+    wireSerial.begin(DEFAULT_BAUD_RATE);
 
-    Serial3.begin(57600);
+    dht.setup(DHTpin, DHTesp::DHT11);  //for DHT11 Connect DHT sensor to GPIO 15
 
     // initialize digital pin LED_BUILTIN as an output.
     pinMode(LED_BUILTIN, OUTPUT);
@@ -48,27 +51,50 @@ void loop() {
     float AC_FREQUENCY = pzem04t.frequency();
     float AC_PF = pzem04t.pf();
 
-    // if (!isnan(DC_VOLTAGE)) {
-    //     Serial.println("########### PZEM-017 ###############");
-    //     Serial.println("PZEM-017 V: " + String(DC_VOLTAGE));
-    //     Serial.println("PZEM-017 A: " + String(DC_CURRENT));
-    //     Serial.println("PZEM-017 W:" + String(DC_POWER));
-    //     Serial.println("PZEM-017 E: " + String(DC_ENERGY));
-    // }
+    // DHT11
+    float HUMIDITY = !isnan(dht.getHumidity()) ? dht.getHumidity() : 0;
+    float TEMPERATURE = !isnan(dht.getTemperature()) ? dht.getTemperature() : 0;
 
-    // if (!isnan(AC_VOLTAGE)) {
-    //     Serial.println("########### PZEM-014 ###############");
-    //     Serial.println("PZEM-004T VOLTAGE: " + String(AC_VOLTAGE));
-    //     Serial.println("PZEM-004T CURRENT: " + String(AC_CURRENT));
-    //     Serial.println("PZEM-004T POWER:" + String(AC_POWER));
-    //     Serial.println("PZEM-004T ENERGY: " + String(AC_ENERGY));
-    //     Serial.println("PZEM-004T FREQUENCY: " + String(AC_FREQUENCY));
-    //     Serial.println("PZEM-004T PF: " + String(AC_PF));
-    // }
+    //Random Data
+    if (ENABLE_TEST_MODE) {
+        DC_VOLTAGE = random(11.2, 15.4);
+        DC_CURRENT = random(2.1, 7.6);
+        DC_POWER = random(90.5, 200.3);
+        DC_ENERGY = random(400.4, 600.9);
 
+        AC_VOLTAGE = random(200, 250);
+        AC_CURRENT = random(8, 15);
+        AC_POWER = random(300, 400);
+        AC_ENERGY = random(300, 500);
+        AC_FREQUENCY = random(49, 54);
+        AC_PF = random(20, 30);
+
+        HUMIDITY = random(50, 100);
+        TEMPERATURE = random(20, 50);
+    }
+
+    if (ENABLE_DEBUG_MODE) {
+        if (!isnan(DC_VOLTAGE)) {
+            Serial.println("########### PZEM-017 ###############");
+            Serial.println("PZEM-017 V: " + String(DC_VOLTAGE));
+            Serial.println("PZEM-017 A: " + String(DC_CURRENT));
+            Serial.println("PZEM-017 W:" + String(DC_POWER));
+            Serial.println("PZEM-017 E: " + String(DC_ENERGY));
+        }
+
+        if (!isnan(AC_VOLTAGE)) {
+            Serial.println("########### PZEM-014 ###############");
+            Serial.println("PZEM-004T VOLTAGE: " + String(AC_VOLTAGE));
+            Serial.println("PZEM-004T CURRENT: " + String(AC_CURRENT));
+            Serial.println("PZEM-004T POWER:" + String(AC_POWER));
+            Serial.println("PZEM-004T ENERGY: " + String(AC_ENERGY));
+            Serial.println("PZEM-004T FREQUENCY: " + String(AC_FREQUENCY));
+            Serial.println("PZEM-004T PF: " + String(AC_PF));
+        }
+    }
     //Recived Data
-    while (Serial3.available() > 0) {
-        char inByte = Serial3.read();
+    while (wireSerial.available() > 0) {
+        char inByte = wireSerial.read();
         Serial.write(inByte);
     }
 
@@ -79,12 +105,12 @@ void loop() {
 
         DynamicJsonBuffer jsonBuffer;
         JsonObject &root = jsonBuffer.createObject();
-        root["deviceName"] = "Mega 2560 Pro (Mini)";
+        root["deviceName"] = DEVICE_NAME;
 
         JsonObject &data = root.createNestedObject("sensor");
         // DHT11
-        data["humidity"] = 20;
-        data["temperature"] = 30;
+        data["humidity"] = HUMIDITY;
+        data["temperature"] = TEMPERATURE;
 
         JsonObject &dc = data.createNestedObject("dc");
         // PZEM-017
@@ -109,9 +135,13 @@ void loop() {
         String output;
         root.prettyPrintTo(output);
 
-        Serial3.write(output.c_str(), output.length());
-        Serial.print("Send to arduino - " + output);
+        wireSerial.write(output.c_str(), output.length());
+
+        if (ENABLE_DEBUG_MODE)
+            Serial.print(output);
 
         digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
     }
+
+    delay(500);
 }
