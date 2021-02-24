@@ -7,7 +7,7 @@
 #define HIGHT_VOLTAGE 15.10
 #define LOW_VOLTAGE 10.50
 
-#define ENABLE_TEST_MODE true  // ###############
+#define ENABLE_TEST_MODE false  // ###############
 #define ENABLE_DEBUG_MODE true
 #define DEFAULT_BAUD_RATE 115200
 
