@@ -8,7 +8,7 @@
 #define LOW_VOLTAGE 10.50
 
 #define ENABLE_TEST_MODE false  // ###############
-#define ENABLE_DEBUG_MODE true
+#define ENABLE_DEBUG_MODE false
 #define DEFAULT_BAUD_RATE 115200
 
 // DHT11
