@@ -44,7 +44,6 @@ void setup() {
     setupDisplay();
 }
 
-int i = 0;
 void loop() {
     //Recived Data
     //static String jsonResponse = "";
@@ -182,8 +181,6 @@ void loop() {
         digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
     }
 
-    i++;
-
     //(start, แนวตั้ง,ไปทางช้าย, ลงล่าง)
 
     // delay(2000);
@@ -204,39 +201,24 @@ void loop() {
     // myGLCD.printNumI(millis(), CENTER, 305);
 }
 
-#define MAX_WORLD_COUNT 5
-#define MIN_WORLD_COUNT 2
+#define MAX_WORLD_COUNT 21
+#define MIN_WORLD_COUNT 3
 char *Words[MAX_WORLD_COUNT];
 
 byte split_message(char *str) {
-    byte word_count = 0;             //number of words
-    char *item = strtok(str, " ,");  //getting first word (uses space & comma as delimeter)
+    byte word_count = 0;            //number of words
+    char *item = strtok(str, "!");  //getting first word (uses space & comma as delimeter)
 
     while (item != NULL) {
         if (word_count >= MAX_WORLD_COUNT) {
             break;
         }
         Words[word_count] = item;
-        item = strtok(NULL, " ,");  //getting subsequence word
+        item = strtok(NULL, "!");  //getting subsequence word
         word_count++;
     }
     return word_count;
 }
-
-void print_message(byte word_count) {
-    //if (word_count >= MIN_WORLD_COUNT) {
-    //Serial.print("Word count : ");  Serial.println(word_count);
-    for (byte sms_block = 0; sms_block < word_count; sms_block++) {
-        Serial.print("Word ");
-        Serial.print(sms_block + 1);
-        Serial.print(" : ");
-        Serial.println(Words[sms_block]);
-    }
-    Serial.println("--------------------");
-    //}
-}
-
-int xx = 0;
 
 String temp, humidity, soiMoisture;
 String ipAddress, lastUpdate;
@@ -252,94 +234,114 @@ String dc_voltage_usage, dc_current_usage, dc_active_power,
     ac_frequency, ac_pf;
 
 void serialEvent3() {
-    byte word_count;
-
+    String jsonResponse;
     while (Serial3.available() > 0) {
-        //char inChar = (char)Serial3.read();  // get the new byte:
-        String comStr = Serial3.readStringUntil('\n');
+        //String jsonResponse = Serial3.readStringUntil('|');
+        char inChar = Serial3.read();
+        jsonResponse += inChar;
+        if (inChar == '|') {
+            byte word_count = split_message(jsonResponse.c_str());
+            String index = Words[0];
+            String deviceName = Words[1];
+            String ipAddress = Words[2];
+            String lastUpdate = Words[3];
 
-        comStr.trim();
-        DynamicJsonBuffer jsonBuffer;
-        JsonObject &root = jsonBuffer.parseObject(comStr);
+            if (word_count > MIN_WORLD_COUNT) {
+                Serial.println("[" + index + "]" + deviceName + " --------------");
 
-        if (!root.success()) {
-            Serial.println("Failed to parse json");
-            Serial.println(comStr);
-            Serial.println("--------------------");
-        } else {
-            // Serial.println("DATA :" + comStr);
-            // word_count = split_message(comStr.c_str());
-            // if (word_count >= MIN_WORLD_COUNT) {
-            //     Serial.println("DATA :" + String(xx));
-            //     print_message(word_count);
-            // }
-            // xx++;
+                if (deviceName == "SOLAR_CHARGER") {
+                    solarPanelVoltage = Words[4];
+                    solarPanelCurrent = Words[5];
+                    solarPanelPower = Words[6];
+                    batteryCharging = Words[7];
+                    batteryCapacity = Words[8];
+                    loadStatus = Words[9];
 
-            // String deviceName = Words[0];
+                    Serial.println("> solarPanelVoltage:" + solarPanelVoltage);
+                    Serial.println("> solarPanelCurrent:" + solarPanelCurrent);
+                    Serial.println("> solarPanelPower:" + solarPanelPower);
+                    Serial.println("> batteryCharging:" + batteryCharging);
+                    Serial.println("> batteryCapacity:" + batteryCapacity);
+                    Serial.println("> loadStatus:" + loadStatus);
 
-            //Verify Json Format
+                } else if (deviceName == "SolarPower") {
+                    temp = Words[4];
+                    humidity = Words[5];
 
-            if (root["command"]["action"] == "ENERGY_RESET") {
-                pzem017.resetEnergy();
-                Serial.println("Reset Energy");
+                    Serial.println("> temp:" + String(Words[4]));
+                    Serial.println("> humidity:" + String(Words[5]));
+                    //DC
+                    dc_voltage_usage = Words[6];
+                    dc_current_usage = Words[7];
+                    dc_active_power = Words[8];
+                    dc_active_energy = Words[9];
+                    dc_active_energy_raw = Words[10];
+
+                    Serial.println("> dc_voltage_usage:" + String(Words[6]));
+                    Serial.println("> dc_current_usage:" + String(Words[7]));
+                    Serial.println("> dc_active_power:" + String(Words[8]));
+                    Serial.println("> dc_active_energy:" + String(Words[9]));
+                    Serial.println("> dc_active_energy_raw:" + String(Words[10]));
+
+                    //AC
+                    ac_voltage_usage = Words[11];
+                    ac_current_usage = Words[12];
+                    ac_active_power = Words[13];
+                    ac_active_energy = Words[14];
+                    ac_frequency = Words[15];
+                    ac_pf = Words[16];
+
+                    Serial.println("> ac_voltage_usage:" + String(Words[11]));
+                    Serial.println("> ac_current_usage:" + String(Words[12]));
+                    Serial.println("> ac_active_power:" + String(Words[13]));
+                    Serial.println("> ac_active_energy:" + String(Words[14]));
+                    Serial.println("> ac_frequency:" + String(Words[15]));
+                    Serial.println("> ac_pf:" + String(Words[16]));
+
+                    inverterState = String(Words[17]) == "ON";
+                    coolingFanState = String(Words[18]) == "ON";
+                    ledLightStage = String(Words[19]) == "ON";
+                    spotLightState = String(Words[20]) == "ON";
+                    powerBackupStage = String(Words[21]) == "ON";
+
+                    Serial.println("> inverterState:" + String(Words[17]));
+                    Serial.println("> coolingFanState:" + String(Words[18]));
+                    Serial.println("> ledLightStage:" + String(Words[19]));
+                    Serial.println("> spotLightState:" + String(Words[20]));
+                    Serial.println("> powerBackupStage:" + String(Words[21]));
+
+                } else if (deviceName == "FarmBot") {
+                    soiMoisture = String(Words[4]);
+                    //soiMoisture_Raw = Words[5];
+                    waterThePlantStage = String(Words[6]) == "ON";
+                    waterSpinklerStage = String(Words[7]) == "ON";
+
+                    Serial.println("> soiMoisture:" + soiMoisture);
+                    Serial.println("> waterThePlantStage:" + String(Words[6]));
+                    Serial.println("> waterSpinklerStage:" + String(Words[7]));
+                } else if (deviceName == "SmartGarden") {
+                    //livingRoomLightStage = root["sensor"]["INVERTER"]== "ON";
+                    livingRoomLightStage = false;
+                    gadenLightStage = String(Words[4]) == "ON";
+                    waterFallPumpStage = String(Words[5]) == "ON";
+
+                    Serial.println("> gadenLightStage:" + String(Words[5]));
+                    Serial.println("> waterFallPumpStage:" + String(Words[5]));
+                }
+
+                displayPzemSensor(dc_voltage_usage, dc_current_usage, dc_active_power,
+                                  dc_active_energy, dc_active_energy_raw, ac_voltage_usage,
+                                  ac_current_usage, ac_active_power, ac_active_energy,
+                                  ac_frequency, ac_pf);
+                displayControlChargerInfo(solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryCharging, batteryCapacity, loadStatus);
+                displayEnvironment(temp, humidity, soiMoisture);
+                displaySwitch(inverterState, coolingFanState, ledLightStage, spotLightState, powerBackupStage,
+                              livingRoomLightStage, gadenLightStage, waterFallPumpStage,
+                              waterThePlantStage, waterSpinklerStage);
+                showDeviceInfo(ipAddress, lastUpdate);
             }
-            String deviceName = root["deviceName"];
-            String lastUpdate = root["time"];
-            Serial.println(deviceName + " LastUpdate:" + lastUpdate);
 
-            ipAddress = root["ipAddress"].as<String>();
-            lastUpdate = root["time"].as<String>();
-
-            if (deviceName == "SOLAR_CHARGER") {
-                solarPanelVoltage = root["sensor"]["solarPanelVoltage"].as<String>();
-                solarPanelCurrent = root["sensor"]["solarPanelCurrent"].as<String>();
-                solarPanelPower = root["sensor"]["solarPanelPower"].as<String>();
-                batteryCharging = root["sensor"]["batteryCharging"].as<String>();
-                batteryCapacity = root["sensor"]["batteryCapacity"].as<String>();
-                loadStatus = root["sensor"]["loadStatus"].as<String>();
-            } else if (deviceName == "SolarPower") {
-                dc_voltage_usage = root["sensor"]["dc"]["voltage_usage"].as<String>();
-                dc_current_usage = root["sensor"]["dc"]["current_usage"].as<String>();
-                dc_active_power = root["sensor"]["dc"]["active_power"].as<String>();
-                dc_active_energy = root["sensor"]["dc"]["active_energy"].as<String>();
-                dc_active_energy_raw = root["sensor"]["dc"]["active_energy_raw"].as<String>();
-                ac_voltage_usage = root["sensor"]["ac"]["voltage_usage"].as<String>();
-                ac_current_usage = root["sensor"]["ac"]["current_usage"].as<String>();
-                ac_active_power = root["sensor"]["ac"]["active_power"].as<String>();
-                ac_active_energy = root["sensor"]["ac"]["active_energy"].as<String>();
-                ac_frequency = root["sensor"]["ac"]["frequency"].as<String>();
-                ac_pf = root["sensor"]["ac"]["pf"].as<String>();
-
-                temp = root["sensor"]["temperature"].as<String>();
-                humidity = root["sensor"]["humidity"].as<String>();
-
-                inverterState = root["sensor"]["INVERTER"].as<bool>();
-                coolingFanState = root["sensor"]["COOLING_FAN"].as<bool>();
-                ledLightStage = root["sensor"]["LIGHT"].as<bool>();
-                spotLightState = root["sensor"]["SPOTLIGHT"].as<bool>();
-                powerBackupStage = root["sensor"]["POWER_BACKUP"].as<bool>();
-
-            } else if (deviceName == "FarmBot") {
-                soiMoisture = root["sensor"]["soilMoistureRaw"].as<String>();
-                waterThePlantStage = root["sensor"]["WATER_THE_PLANTS"].as<bool>();
-                waterSpinklerStage = root["sensor"]["WATER_SPRINKLER"].as<bool>();
-            } else if (deviceName == "FarmBot") {
-                //livingRoomLightStage = root["sensor"]["INVERTER"].as<bool>();
-                livingRoomLightStage = false;
-                gadenLightStage = root["sensor"]["GARDEN_LIGHT"].as<bool>();
-                waterFallPumpStage = root["sensor"]["WATER_FALL_PUMP"].as<bool>();
-            }
-
-            displayPzemSensor(dc_voltage_usage, dc_current_usage, dc_active_power,
-                              dc_active_energy, dc_active_energy_raw, ac_voltage_usage,
-                              ac_current_usage, ac_active_power, ac_active_energy,
-                              ac_frequency, ac_pf);
-            displayControlChargerInfo(solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryCharging, batteryCapacity, loadStatus);
-            displayEnvironment(temp, humidity, soiMoisture);
-            displaySwitch(inverterState, coolingFanState, ledLightStage, spotLightState, powerBackupStage,
-                          livingRoomLightStage, gadenLightStage, waterFallPumpStage,
-                          waterThePlantStage, waterSpinklerStage);
-            showDeviceInfo(ipAddress, lastUpdate);
+            jsonResponse = "";
         }
     }
 }
