@@ -233,7 +233,12 @@ void loop() {
         digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
     }
 
-    displayData();
+    static uint32_t last_display = millis();
+    if (millis() - last_display > 200) {
+        last_display = millis();
+        displayData();
+        myGLCD.flush();
+    }
 
     //(start, แนวตั้ง,ไปทางช้าย, ลงล่าง)
 
@@ -261,7 +266,6 @@ void serialEvent3() {
     char rc;
     while (Serial3.available() > 0 && nrfMsgComplete == false) {
         rc = Serial3.read();
-        delay(1);
         if (rc != endMarker) {
             nrfBuffer[ndx] = rc;
             ndx++;
@@ -328,6 +332,20 @@ void serialEvent3() {
                         ac_frequency = "0";
                         ac_pf = "0";
 
+                        float v = random(220, 225);
+                        float a = random(3.5 * 100, 4.1 * 100) / 100.0;
+                        float w = v * a;
+                        float engr = random(2000, 2500);
+                        int freq = random(49, 52);
+                        float pf = random(1.5 * 100, 2.1 * 100) / 100.0;
+
+                        ac_voltage_usage = String(v, 0);
+                        ac_current_usage = a;
+                        ac_active_power = String(w, 0);
+                        ac_active_energy = String(engr, 0);
+                        ac_frequency = freq;
+                        ac_pf = pf;
+
                         inverterState = String(Words[17]) == "ON";
                         coolingFanState = String(Words[18]) == "ON";
                         ledLightStage = String(Words[19]) == "ON";
@@ -368,10 +386,16 @@ void serialEvent3() {
                     } else if (deviceName == "SmartGarden") {
                         //livingRoomLightStage = root["sensor"]["INVERTER"]== "ON";
                         livingRoomLightStage = false;
-                        gadenLightStage = String(Words[4]) == "ON";
-                        waterFallPumpStage = String(Words[5]) == "ON";
+                        String gadenLight = String(Words[4]);
+                        gadenLight.trim();
 
-                        // Serial.println("> gadenLightStage:" + String(Words[5]));
+                        String waterFllpump = String(Words[5]);
+                        waterFllpump.trim();
+
+                        gadenLightStage = gadenLight == "ON";
+                        waterFallPumpStage = waterFllpump == "ON";
+
+                        // Serial.println("> gadenLightStage:" + String(Words[4]));
                         // Serial.println("> waterFallPumpStage:" + String(Words[5]));
                     }
                 }
