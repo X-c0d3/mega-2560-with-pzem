@@ -307,8 +307,8 @@ void serialEvent3() {
                         // Serial.println("> loadStatus:" + loadStatus);
 
                     } else if (deviceName == "SolarPower") {
-                        temp = Words[4];
-                        humidity = Words[5];
+                        humidity = Words[4];
+                        temp = Words[5];
 
                         //DC
                         dc_voltage_usage = Words[6];
@@ -325,30 +325,9 @@ void serialEvent3() {
                         // ac_frequency = Words[15];
                         // ac_pf = Words[16];
 
-                        ac_voltage_usage = "0";
-                        ac_current_usage = "0";
-                        ac_active_power = "0";
-                        ac_active_energy = "0";
-                        ac_frequency = "0";
-                        ac_pf = "0";
-
-                        float v = random(220, 225);
-                        float a = random(3.5 * 100, 4.1 * 100) / 100.0;
-                        float w = v * a;
-                        float engr = random(2000, 2500);
-                        int freq = random(49, 52);
-                        float pf = random(1.5 * 100, 2.1 * 100) / 100.0;
-
-                        ac_voltage_usage = String(v, 0);
-                        ac_current_usage = a;
-                        ac_active_power = String(w, 0);
-                        ac_active_energy = String(engr, 0);
-                        ac_frequency = freq;
-                        ac_pf = pf;
-
                         inverterState = String(Words[17]) == "ON";
                         coolingFanState = String(Words[18]) == "ON";
-                        ledLightStage = String(Words[19]) == "ON";
+                        ledLightStage = (loadStatus == "ON") ? true : String(Words[19]) == "ON";
                         spotLightState = String(Words[20]) == "ON";
                         powerBackupStage = String(Words[21]) == "ON";
 
@@ -373,7 +352,13 @@ void serialEvent3() {
                         // Serial.println("> ledLightStage:" + String(Words[19]));
                         // Serial.println("> spotLightState:" + String(Words[20]));
                         // Serial.println("> powerBackupStage:" + String(Words[21]));
-
+                    } else if (deviceName == "MainPower") {
+                        ac_voltage_usage = Words[4];
+                        ac_current_usage = Words[5];
+                        ac_active_power = Words[6];
+                        ac_active_energy = Words[7];
+                        ac_frequency = Words[8];
+                        ac_pf = Words[9];
                     } else if (deviceName == "FarmBot") {
                         soiMoisture = String(Words[4]);
                         //soiMoisture_Raw = Words[5];

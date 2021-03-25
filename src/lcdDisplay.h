@@ -133,7 +133,7 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
     myGLCD.print("Power: " + ac_active_power + " W", 260, 80);
     myGLCD.print("Energy: " + ac_active_energy + " KWh", 260, 100);
     myGLCD.print("Freq: " + ac_frequency + " Hz", 260, 120);
-    myGLCD.print("PF: " + ac_pf + " A", 260, 140);
+    myGLCD.print("PF: " + ac_pf, 260, 140);
 }
 
 void displayControlChargerInfo(String solarPanelVoltage, String solarPanelCurrent,
