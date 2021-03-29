@@ -9,7 +9,6 @@
 
 #include "config.h"
 #include "lcdDisplay.h"
-
 // For Mega 2560 Pro Hardware Serial
 // Hardware Serial0  =  1: RX0,   0: TX0
 // Hardware Serial1  = 19: RX1,  18: TX1
@@ -260,6 +259,10 @@ void loop() {
     // myGLCD.printNumI(millis(), CENTER, 305);
 }
 
+int digits(int x) {
+    return ((bool)x * (int)log10(abs(x)) + 1);
+}
+
 char endMarker = '\n';
 void serialEvent3() {
     static byte ndx = 0;
@@ -276,22 +279,16 @@ void serialEvent3() {
             nrfBuffer[ndx] = '\0';  // terminate the string
             ndx = 0;
 
-            int dataLength = strlen(nrfBuffer) - 3;
-            Serial.print(String(dataLength) + " => ");
+            int sizeData = strlen(nrfBuffer) - 1;
             Serial.println(nrfBuffer);
-
             byte word_count = split_message(nrfBuffer);
-            int checkSumCount = String(Words[0]).toInt();
+            int ckSum = String(Words[0]).toInt();
+
             deviceName = Words[1];
             ipAddress = Words[2];
             lastUpdate = Words[3];
 
-            // Serial.println("checkSumCount => " + String(checkSumCount));
-            // Serial.println("deviceName => " + deviceName);
-            // Serial.println("ipAddress => " + ipAddress);
-            // Serial.println("word_count => " + word_count);
-
-            if (word_count > MIN_WORLD_COUNT && checkSumCount == (dataLength)) {
+            if (word_count > MIN_WORLD_COUNT && ckSum == (sizeData - digits(ckSum))) {
                 if (deviceName == "SOLAR_CHARGER") {
                     solarPanelVoltage = Words[4];
                     solarPanelCurrent = Words[5];
