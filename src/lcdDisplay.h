@@ -25,7 +25,7 @@
 
 UTFTGLUE myGLCD(0, A2, A1, A3, A4, A0);  //all dummy args
 DynamicJsonBuffer jsonBuffer;
-int rotation = 0;  //Vertical : 0, Holizontal : 3
+int rotation = 3;  //Vertical : 0, Holizontal : 3
 
 void setupDisplay() {
     randomSeed(analogRead(0));
