@@ -320,10 +320,7 @@ void serialEvent3() {
                     coolingFanState = String(Words[18]) == "ON";
                     ledLightStage = (loadStatus == "ON") ? true : String(Words[19]) == "ON";
                     spotLightState = String(Words[20]) == "ON";
-
-                    String _powerBackupStage = String(Words[21]);
-                    _powerBackupStage.trim();
-                    powerBackupStage = _powerBackupStage == "ON";
+                    powerBackupStage = String(Words[21]) == "ON";
 
                 } else if (deviceName == "MainPower") {
                     ac_voltage_usage = Words[4];
@@ -332,6 +329,7 @@ void serialEvent3() {
                     ac_active_energy = Words[7];
                     ac_frequency = Words[8];
                     ac_pf = Words[9];
+
                 } else if (deviceName == "FarmBot") {
                     soiMoisture = String(Words[4]);
                     //soiMoisture_Raw = Words[5];
@@ -341,14 +339,9 @@ void serialEvent3() {
                 } else if (deviceName == "SmartGarden") {
                     //livingRoomLightStage = root["sensor"]["INVERTER"]== "ON";
                     livingRoomLightStage = false;
-                    String gadenLight = String(Words[4]);
-                    gadenLight.trim();
 
-                    String waterFllpump = String(Words[5]);
-                    waterFllpump.trim();
-
-                    gadenLightStage = gadenLight == "ON";
-                    waterFallPumpStage = waterFllpump == "ON";
+                    gadenLightStage = String(Words[4]) == "ON";
+                    waterFallPumpStage = String(Words[5]) == "ON";
                 }
             } else {
                 Serial.println(" ***** Check Sum Error ***** ");
