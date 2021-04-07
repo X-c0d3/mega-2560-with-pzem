@@ -15,6 +15,7 @@
 // Hardware Serial2  = 17: RX2,  16: TX2
 // Hardware Serial3  = 15: RX3,  14: TX3
 
+#define USING_16BIT_BUS
 // https://community.platformio.org/t/how-to-increase-the-arduino-serial-buffer-size/122
 
 PZEM017 pzem017(&Serial1);
@@ -321,7 +322,6 @@ void serialEvent3() {
                     ledLightStage = (loadStatus == "ON") ? true : String(Words[19]) == "ON";
                     spotLightState = String(Words[20]) == "ON";
                     powerBackupStage = String(Words[21]) == "ON";
-
                 } else if (deviceName == "MainPower") {
                     ac_voltage_usage = Words[4];
                     ac_current_usage = Words[5];
@@ -329,19 +329,16 @@ void serialEvent3() {
                     ac_active_energy = Words[7];
                     ac_frequency = Words[8];
                     ac_pf = Words[9];
-
+                } else if (deviceName == "HomeControl") {
+                    gadenLightStage = String(Words[4]) == "ON";
+                    livingRoomLightStage = String(Words[5]) == "ON";
                 } else if (deviceName == "FarmBot") {
                     soiMoisture = String(Words[4]);
                     //soiMoisture_Raw = Words[5];
                     waterThePlantStage = String(Words[6]) == "ON";
                     waterSpinklerStage = String(Words[7]) == "ON";
-
                 } else if (deviceName == "SmartGarden") {
-                    //livingRoomLightStage = root["sensor"]["INVERTER"]== "ON";
-                    livingRoomLightStage = false;
-
-                    gadenLightStage = String(Words[4]) == "ON";
-                    waterFallPumpStage = String(Words[5]) == "ON";
+                    waterFallPumpStage = String(Words[4]) == "ON";
                 }
             } else {
                 Serial.println(" ***** Check Sum Error ***** ");
