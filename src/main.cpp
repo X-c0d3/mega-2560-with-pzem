@@ -195,23 +195,22 @@ void loop() {
             }
         }
 
-        DynamicJsonBuffer jsonBuffer;
-        JsonObject &root = jsonBuffer.createObject();
+        DynamicJsonDocument root(1024);
         root["deviceName"] = DEVICE_NAME;
 
-        JsonObject &data = root.createNestedObject("sensor");
+        JsonObject data = root.createNestedObject("sensor");
         // DHT11
         data["humidity"] = HUMIDITY;
         data["temperature"] = TEMPERATURE;
 
-        JsonObject &dc = data.createNestedObject("dc");
+        JsonObject dc = data.createNestedObject("dc");
         // PZEM-017
         dc["voltage_usage"] = DC_VOLTAGE;
         dc["current_usage"] = DC_CURRENT;
         dc["active_power"] = DC_POWER;
         dc["active_energy"] = DC_ENERGY;
 
-        JsonObject &ac = data.createNestedObject("ac");
+        JsonObject ac = data.createNestedObject("ac");
         // PZEM-004T
         ac["voltage_usage"] = AC_VOLTAGE;
         ac["current_usage"] = AC_CURRENT;
@@ -220,13 +219,12 @@ void loop() {
         ac["frequency"] = AC_FREQUENCY;
         ac["pf"] = AC_PF;
 
-        JsonObject &deviceState = root.createNestedObject("deviceState");
+        JsonObject deviceState = root.createNestedObject("deviceState");
         deviceState["LED1"] = "ON";
         deviceState["LED2"] = "OFF";
 
         String output;
-        root.prettyPrintTo(output);
-        //Send data to Serial
+        serializeJson(root, output);
         Serial3.write(output.c_str(), output.length());
 
         // if (ENABLE_DEBUG_MODE)
