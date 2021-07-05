@@ -133,14 +133,14 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
     myGLCD.setBackColor(0, 0, 0);
     myGLCD.setTextSize(2);
     if (rotation == 0) {
-        myGLCD.print(" (DC) ", 20, 20);
+        myGLCD.print(" (High Volt Inverter) ", 20, 20);
         myGLCD.print("Voltage: " + dc_voltage_usage + "V", 10, 40);
         myGLCD.print("Current: " + dc_current_usage + "A", 10, 60);
         myGLCD.print("Power: " + dc_active_power + "W", 10, 80);
         myGLCD.print("Energy: " + dc_active_energy + "KWh", 10, 100);
 
         myGLCD.setColor(255, 105, 180);
-        myGLCD.print(" (AC) ", 20, 285);
+        myGLCD.print(" (Main AC) ", 20, 285);
         myGLCD.print("Voltage: " + ac_voltage_usage + "V", 10, 305);
         myGLCD.print("Current: " + ac_current_usage + "A", 10, 325);
         myGLCD.print("Power: " + ac_active_power + "W", 10, 345);
@@ -149,14 +149,14 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
         myGLCD.print("PF: " + ac_pf, 10, 405);
 
     } else {
-        myGLCD.print(" (DC) ", 60, 20);
+        myGLCD.print(" (Hi-Volt Inverter) ", 10, 20);
         myGLCD.print("Voltage: " + dc_voltage_usage + "V", 10, 40);
         myGLCD.print("Current: " + dc_current_usage + "A", 10, 60);
         myGLCD.print("Power: " + dc_active_power + "W", 10, 80);
         myGLCD.print("Energy: " + dc_active_energy + "KWh", 10, 100);
 
         myGLCD.setColor(255, 105, 180);
-        myGLCD.print(" (AC) ", 315, 20);
+        myGLCD.print(" (Main AC) ", 290, 20);
         myGLCD.print("Voltage: " + ac_voltage_usage + "V", 260, 40);
         myGLCD.print("Current: " + ac_current_usage + "A", 260, 60);
         myGLCD.print("Power: " + ac_active_power + "W", 260, 80);
