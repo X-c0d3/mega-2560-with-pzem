@@ -18,8 +18,8 @@
 #define USING_16BIT_BUS
 // https://community.platformio.org/t/how-to-increase-the-arduino-serial-buffer-size/122
 
-PZEM017 pzem017(&Serial1);
-PZEM004Tv30 pzem04t(&Serial2);
+// PZEM017 pzem017(&Serial1);
+// PZEM004Tv30 pzem04t(&Serial2);
 DHTesp dht;
 
 //WireSerial (RX/TX) - Cable
@@ -36,15 +36,15 @@ void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     delay(2000);
 
-    pzem017.setCurrentShunt(0x0001);
+    //pzem017.setCurrentShunt(0x0001);
     // pzem017.setHIVoltageAlarm(HIGHT_VOLTAGE);
     // pzem017.setLOWVoltageAlarm(LOW_VOLTAGE);
 
-    pzem017.resetEnergy();
+    //pzem017.resetEnergy();
     setupDisplay();
 }
 
-#define MAX_WORLD_COUNT 30
+#define MAX_WORLD_COUNT 140
 #define MIN_WORLD_COUNT 5
 char *Words[MAX_WORLD_COUNT];
 
@@ -63,7 +63,7 @@ byte split_message(char *str) {
     return word_count;
 }
 
-const byte numNrfChars = 900;
+const byte numNrfChars = 1000;
 char nrfBuffer[numNrfChars];  // an array to store the received data
 boolean comReady = false;
 
@@ -73,22 +73,41 @@ bool inverterState, coolingFanState, ledLightStage, spotLightState,
     powerBackupStage, livingRoomLightStage, gadenLightStage,
     waterFallPumpStage, waterThePlantStage, waterSpinklerStage;
 
-String solarPanelVoltage, solarPanelCurrent, solarPanelPower,
+String solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryVoltage,
     batteryCharging, batteryCapacity, loadStatus;
 
 String dc_voltage_usage, dc_current_usage, dc_active_power,
-    dc_active_energy, dc_active_energy_raw, ac_voltage_usage,
-    ac_current_usage, ac_active_power, ac_active_energy,
-    ac_frequency, ac_pf;
+    dc_active_energy, dc_active_energy_raw,
+    inv_ac_voltage_usage,
+    inv_ac_current_usage,
+    inv_ac_active_power,
+    inv_ac_active_energy,
+    inv_ac_frequency,
+    inv_ac_pf,
+    main_ac_voltage_usage,
+    main_ac_current_usage,
+    main_ac_active_power,
+    main_ac_active_energy,
+    main_ac_frequency,
+    main_ac_pf;
 
 String deviceName;
 
 void displayData() {
     displayPzemSensor(dc_voltage_usage, dc_current_usage, dc_active_power,
-                      dc_active_energy, dc_active_energy_raw, ac_voltage_usage,
-                      ac_current_usage, ac_active_power, ac_active_energy,
-                      ac_frequency, ac_pf);
-    displayControlChargerInfo(solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryCharging, batteryCapacity, loadStatus);
+                      dc_active_energy, dc_active_energy_raw,
+                      inv_ac_voltage_usage,
+                      inv_ac_current_usage,
+                      inv_ac_active_power,
+                      inv_ac_active_energy,
+                      inv_ac_frequency,
+                      inv_ac_pf,
+                      main_ac_voltage_usage,
+                      main_ac_current_usage,
+                      main_ac_active_power,
+                      main_ac_active_energy,
+                      main_ac_frequency, main_ac_pf);
+    displayControlChargerInfo(solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryVoltage, batteryCharging, batteryCapacity, loadStatus);
     displayEnvironment(temp, humidity, soiMoisture);
     displaySwitch(inverterState, coolingFanState, ledLightStage, spotLightState, powerBackupStage,
                   livingRoomLightStage, gadenLightStage, waterFallPumpStage,
@@ -140,92 +159,92 @@ void loop() {
     if (millis() - last_send > 1000) {
         last_send = millis();
 
-        // PZEM-017
-        float DC_VOLTAGE = pzem017.voltage();
-        float DC_CURRENT = pzem017.current();
-        float DC_POWER = pzem017.power() * 10;
-        float DC_ENERGY = pzem017.energy() * 10;
+        // // PZEM-017
+        // float DC_VOLTAGE = pzem017.voltage();
+        // float DC_CURRENT = pzem017.current();
+        // float DC_POWER = pzem017.power() * 10;
+        // float DC_ENERGY = pzem017.energy() * 10;
 
-        float AC_VOLTAGE = pzem04t.voltage();
-        float AC_CURRENT = pzem04t.current();
-        float AC_POWER = pzem04t.power();
-        float AC_ENERGY = pzem04t.energy();
-        float AC_FREQUENCY = pzem04t.frequency();
-        float AC_PF = pzem04t.pf();
+        // float AC_VOLTAGE = pzem04t.voltage();
+        // float AC_CURRENT = pzem04t.current();
+        // float AC_POWER = pzem04t.power();
+        // float AC_ENERGY = pzem04t.energy();
+        // float AC_FREQUENCY = pzem04t.frequency();
+        // float AC_PF = pzem04t.pf();
 
-        // DHT11
-        float HUMIDITY = !isnan(dht.getHumidity()) ? dht.getHumidity() : 0;
-        float TEMPERATURE = !isnan(dht.getTemperature()) ? dht.getTemperature() : 0;
+        // // DHT11
+        // float HUMIDITY = !isnan(dht.getHumidity()) ? dht.getHumidity() : 0;
+        // float TEMPERATURE = !isnan(dht.getTemperature()) ? dht.getTemperature() : 0;
 
-        //Random Data
-        if (ENABLE_TEST_MODE) {
-            DC_VOLTAGE = random(11.2, 15.4);
-            DC_CURRENT = random(2.1, 7.6);
-            DC_POWER = random(90.5, 200.3);
-            DC_ENERGY = random(400.4, 600.9);
+        // //Random Data
+        // if (ENABLE_TEST_MODE) {
+        //     DC_VOLTAGE = random(11.2, 15.4);
+        //     DC_CURRENT = random(2.1, 7.6);
+        //     DC_POWER = random(90.5, 200.3);
+        //     DC_ENERGY = random(400.4, 600.9);
 
-            AC_VOLTAGE = random(200, 250);
-            AC_CURRENT = random(8, 15);
-            AC_POWER = random(300, 400);
-            AC_ENERGY = random(300, 500);
-            AC_FREQUENCY = random(49, 54);
-            AC_PF = random(20, 30);
+        //     AC_VOLTAGE = random(200, 250);
+        //     AC_CURRENT = random(8, 15);
+        //     AC_POWER = random(300, 400);
+        //     AC_ENERGY = random(300, 500);
+        //     AC_FREQUENCY = random(49, 54);
+        //     AC_PF = random(20, 30);
 
-            HUMIDITY = random(50, 100);
-            TEMPERATURE = random(20, 50);
-        }
+        //     HUMIDITY = random(50, 100);
+        //     TEMPERATURE = random(20, 50);
+        // }
 
-        if (ENABLE_DEBUG_MODE) {
-            if (!isnan(DC_VOLTAGE)) {
-                Serial.println("########### PZEM-017 ###############");
-                Serial.println("PZEM-017 V: " + String(DC_VOLTAGE));
-                Serial.println("PZEM-017 A: " + String(DC_CURRENT));
-                Serial.println("PZEM-017 W:" + String(DC_POWER));
-                Serial.println("PZEM-017 E: " + String(DC_ENERGY));
-            }
+        // if (ENABLE_DEBUG_MODE) {
+        //     if (!isnan(DC_VOLTAGE)) {
+        //         Serial.println("########### PZEM-017 ###############");
+        //         Serial.println("PZEM-017 V: " + String(DC_VOLTAGE));
+        //         Serial.println("PZEM-017 A: " + String(DC_CURRENT));
+        //         Serial.println("PZEM-017 W:" + String(DC_POWER));
+        //         Serial.println("PZEM-017 E: " + String(DC_ENERGY));
+        //     }
 
-            if (!isnan(AC_VOLTAGE)) {
-                Serial.println("########### PZEM-014 ###############");
-                Serial.println("PZEM-004T VOLTAGE: " + String(AC_VOLTAGE));
-                Serial.println("PZEM-004T CURRENT: " + String(AC_CURRENT));
-                Serial.println("PZEM-004T POWER:" + String(AC_POWER));
-                Serial.println("PZEM-004T ENERGY: " + String(AC_ENERGY));
-                Serial.println("PZEM-004T FREQUENCY: " + String(AC_FREQUENCY));
-                Serial.println("PZEM-004T PF: " + String(AC_PF));
-            }
-        }
+        //     if (!isnan(AC_VOLTAGE)) {
+        //         Serial.println("########### PZEM-014 ###############");
+        //         Serial.println("PZEM-004T VOLTAGE: " + String(AC_VOLTAGE));
+        //         Serial.println("PZEM-004T CURRENT: " + String(AC_CURRENT));
+        //         Serial.println("PZEM-004T POWER:" + String(AC_POWER));
+        //         Serial.println("PZEM-004T ENERGY: " + String(AC_ENERGY));
+        //         Serial.println("PZEM-004T FREQUENCY: " + String(AC_FREQUENCY));
+        //         Serial.println("PZEM-004T PF: " + String(AC_PF));
+        //     }
+        // }
 
-        DynamicJsonDocument root(1024);
-        root["deviceName"] = DEVICE_NAME;
+        // DynamicJsonDocument root(1024);
+        // root["deviceName"] = DEVICE_NAME;
 
-        JsonObject data = root.createNestedObject("sensor");
-        // DHT11
-        data["humidity"] = HUMIDITY;
-        data["temperature"] = TEMPERATURE;
+        // JsonObject data = root.createNestedObject("sensor");
+        // // DHT11
+        // data["humidity"] = HUMIDITY;
+        // data["temperature"] = TEMPERATURE;
 
-        JsonObject dc = data.createNestedObject("dc");
-        // PZEM-017
-        dc["voltage_usage"] = DC_VOLTAGE;
-        dc["current_usage"] = DC_CURRENT;
-        dc["active_power"] = DC_POWER;
-        dc["active_energy"] = DC_ENERGY;
+        // JsonObject dc = data.createNestedObject("dc");
+        // // PZEM-017
+        // dc["voltage_usage"] = DC_VOLTAGE;
+        // dc["current_usage"] = DC_CURRENT;
+        // dc["active_power"] = DC_POWER;
+        // dc["active_energy"] = DC_ENERGY;
 
-        JsonObject ac = data.createNestedObject("ac");
-        // PZEM-004T
-        ac["voltage_usage"] = AC_VOLTAGE;
-        ac["current_usage"] = AC_CURRENT;
-        ac["active_power"] = AC_POWER;
-        ac["active_energy"] = AC_ENERGY;
-        ac["frequency"] = AC_FREQUENCY;
-        ac["pf"] = AC_PF;
+        // JsonObject ac = data.createNestedObject("ac");
+        // // PZEM-004T
+        // ac["voltage_usage"] = AC_VOLTAGE;
+        // ac["current_usage"] = AC_CURRENT;
+        // ac["active_power"] = AC_POWER;
+        // ac["active_energy"] = AC_ENERGY;
+        // ac["frequency"] = AC_FREQUENCY;
+        // ac["pf"] = AC_PF;
 
-        JsonObject deviceState = root.createNestedObject("deviceState");
-        deviceState["LED1"] = "ON";
-        deviceState["LED2"] = "OFF";
+        // JsonObject deviceState = root.createNestedObject("deviceState");
+        // deviceState["LED1"] = "ON";
+        // deviceState["LED2"] = "OFF";
 
-        String output;
-        serializeJson(root, output);
-        Serial3.write(output.c_str(), output.length());
+        // String output;
+        // serializeJson(root, output);
+        // Serial3.write(output.c_str(), output.length());
 
         // if (ENABLE_DEBUG_MODE)
         //     Serial.print(output);
@@ -295,6 +314,7 @@ void serialEvent3() {
                     batteryCharging = Words[7];
                     batteryCapacity = Words[8];
                     loadStatus = Words[9];
+                    batteryVoltage = Words[10];
 
                 } else if (deviceName == "SolarPower") {
                     humidity = Words[4];
@@ -308,12 +328,12 @@ void serialEvent3() {
                     dc_active_energy_raw = Words[10];
 
                     //AC
-                    // ac_voltage_usage = Words[11];
-                    // ac_current_usage = Words[12];
-                    // ac_active_power = Words[13];
-                    // ac_active_energy = Words[14];
-                    // ac_frequency = Words[15];
-                    // ac_pf = Words[16];
+                    inv_ac_voltage_usage = Words[11];
+                    inv_ac_current_usage = Words[12];
+                    inv_ac_active_power = Words[13];
+                    inv_ac_active_energy = Words[14];
+                    inv_ac_frequency = Words[15];
+                    inv_ac_pf = Words[16];
 
                     inverterState = String(Words[17]) == "ON";
                     coolingFanState = String(Words[18]) == "ON";
@@ -321,12 +341,12 @@ void serialEvent3() {
                     spotLightState = String(Words[20]) == "ON";
                     powerBackupStage = String(Words[21]) == "ON";
                 } else if (deviceName == "MainPower") {
-                    ac_voltage_usage = Words[4];
-                    ac_current_usage = Words[5];
-                    ac_active_power = Words[6];
-                    ac_active_energy = Words[7];
-                    ac_frequency = Words[8];
-                    ac_pf = Words[9];
+                    main_ac_voltage_usage = Words[4];
+                    main_ac_current_usage = Words[5];
+                    main_ac_active_power = Words[6];
+                    main_ac_active_energy = Words[7];
+                    main_ac_frequency = Words[8];
+                    main_ac_pf = Words[9];
                 } else if (deviceName == "HomeControl") {
                     gadenLightStage = String(Words[4]) == "ON";
                     livingRoomLightStage = String(Words[5]) == "ON";
@@ -339,7 +359,7 @@ void serialEvent3() {
                     waterFallPumpStage = String(Words[4]) == "ON";
                 }
             } else {
-                Serial.println(" ***** Check Sum Error ***** ");
+                Serial.println(" ***** Check Sum Error ***** => Check Sum:" + String(ckSum) + " Ori Size:" + String(sizeData) + " digits:" + digits(ckSum) + " word_count:" + word_count);
             }
 
             comReady = true;
