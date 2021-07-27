@@ -199,12 +199,12 @@ void displayControlChargerInfo(String solarPanelVoltage, String solarPanelCurren
 
     } else {
         myGLCD.print(" (MPPT Charger) ", 270, 120);
-        myGLCD.print("PV Volt: " + solarPanelVoltage + "V", 260, 140);     //solarPanelVoltage
-        myGLCD.print("PV Curr.: " + solarPanelCurrent + "A", 260, 160);    //solarPanelCurrent
-        myGLCD.print("PV Power: " + solarPanelPower + "W", 260, 180);      //solarPanelPower
-        myGLCD.print("Charge Curr: " + batteryCharging + "A", 260, 200);   //batteryCharging
-        myGLCD.print("Bat Volt: " + batteryVoltage + "V", 260, 220);       //batteryVoltage
-        myGLCD.print("Bat Capacity: " + batteryCapacity + "%", 260, 240);  //batteryCapacity
+        myGLCD.print("Bat Volt: " + batteryVoltage + "V", 260, 140);       //batteryVoltage
+        myGLCD.print("Bat Capacity: " + batteryCapacity + "%", 260, 160);  //batteryCapacity
+        myGLCD.print("Charge Curr: " + batteryCharging + "A", 260, 180);   //batteryCharging
+        myGLCD.print("PV Volt: " + solarPanelVoltage + "V", 260, 200);     //solarPanelVoltage
+        myGLCD.print("PV Curr.: " + solarPanelCurrent + "A", 260, 220);    //solarPanelCurrent
+        myGLCD.print("PV Power: " + solarPanelPower + "W", 260, 240);      //solarPanelPower
         myGLCD.print("Load Status: " + loadStatus, 260, 260);              //loadStatus
         myGLCD.setColor(MAGENTA);
         myGLCD.print(deviceStatus, 260, 280);  //deviceStatus
