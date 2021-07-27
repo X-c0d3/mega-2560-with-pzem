@@ -306,6 +306,10 @@ void serialEvent3() {
             ipAddress = Words[2];
             lastUpdate = Words[3];
 
+            if (deviceName == "Clear") {
+                ClearDisplay();
+            }
+
             if (word_count > MIN_WORLD_COUNT && ckSum == (sizeData - digits(ckSum))) {
                 if (deviceName == "SOLAR_CHARGER") {
                     solarPanelVoltage = Words[4];
@@ -357,8 +361,6 @@ void serialEvent3() {
                     waterSpinklerStage = String(Words[7]) == "ON";
                 } else if (deviceName == "SmartGarden") {
                     waterFallPumpStage = String(Words[4]) == "ON";
-                } else if (deviceName == "Clear") {
-                    ClearDisplay();
                 }
 
             } else {
