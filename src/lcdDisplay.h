@@ -94,21 +94,19 @@ void switchButton(String title, bool isOn, int x1, int y1, int x2, int y2, int m
 
 void displaySwitch(bool inverterState, bool coolingFanState, bool ledLightStage, bool spotLightState, bool powerBackupStage,
                    bool livingRoomLightStage, bool gadenLightStage, bool waterFallPumpStage, bool waterThePlantStage, bool waterSpinklerStage) {
-    int start = 10;
     int y1 = 220;
-    int x2 = 50;
     int y2 = y1 + 30;
-    switchButton("Inverter", inverterState, start, y1, x2, y2, 8);
-    switchButton("FAN", coolingFanState, start * 6, y1, x2 * 2, y2, 73);
-    switchButton("LED LI.", ledLightStage, start * 11, y1, x2 * 3, y2, 113);
-    switchButton("SP LI.", spotLightState, start * 16, y1, x2 * 4, y2, 165);
-    switchButton("P.Backup", powerBackupStage, start * 21, y1, x2 * 5, y2, 210);
+    switchButton("Inverter", inverterState, 1, y1, 40, y2, 0);
+    switchButton("FAN", coolingFanState, 50, y1, 90, y2, 62);
+    switchButton("LED LI.", ledLightStage, 100, y1, 140, y2, 102);
+    switchButton("SP LI.", spotLightState, 150, y1, 190, y2, 155);
+    switchButton("P.Backup", powerBackupStage, 200, y1, 240, y2, 200);
 
-    switchButton("LRM LI.", livingRoomLightStage, start, y1 + 50, x2, y2 + 50, 10);
-    switchButton("GRD LI.", gadenLightStage, start * 6, y1 + 50, x2 * 2, y2 + 50, 63);
-    switchButton("WF Pump", waterFallPumpStage, start * 11, y1 + 50, x2 * 3, y2 + 50, 110);
-    switchButton("WT PLNT", waterThePlantStage, start * 16, y1 + 50, x2 * 4, y2 + 50, 160);
-    switchButton("WT SPIK", waterSpinklerStage, start * 21, y1 + 50, x2 * 5, y2 + 50, 213);
+    switchButton("LRM LI.", livingRoomLightStage, 1, y1 + 50, 40, y2 + 50, 2);
+    switchButton("GRD LI.", gadenLightStage, 50, y1 + 50, 90, y2 + 50, 53);
+    switchButton("WF Pump", waterFallPumpStage, 100, y1 + 50, 140, y2 + 50, 100);
+    switchButton("WT PLNT", waterThePlantStage, 150, y1 + 50, 190, y2 + 50, 150);
+    switchButton("WT SPIK", waterSpinklerStage, 200, y1 + 50, 240, y2 + 50, 200);
 }
 
 String RemoveLastDigit(String input) {
@@ -136,10 +134,10 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
     myGLCD.setTextSize(2);
     if (rotation == 0) {
         myGLCD.print(" (High Volt Inverter) ", 20, 20);
-        myGLCD.print("PV Volt: " + dc_voltage_usage + "V", 10, 40);
-        myGLCD.print("PV Current: " + dc_current_usage + "A", 10, 60);
-        myGLCD.print("PV Power: " + dc_active_power + "W", 10, 80);
-        myGLCD.print("Energy: " + dc_active_energy + "KWh", 10, 100);
+        myGLCD.print("PV Volt: " + dc_voltage_usage + "V", 1, 40);
+        myGLCD.print("PV Current: " + dc_current_usage + "A", 1, 60);
+        myGLCD.print("PV Power: " + dc_active_power + "W", 1, 80);
+        myGLCD.print("Energy: " + dc_active_energy + "KWh", 1, 100);
 
         myGLCD.setColor(255, 105, 180);
         myGLCD.print(" (Main AC) ", 20, 285);
@@ -152,15 +150,15 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
 
     } else {
         myGLCD.print(" (Hi-Volt Inverter) ", 10, 1);
-        myGLCD.print("PV Volt: " + dc_voltage_usage + "V", 10, 20);
-        myGLCD.print("PV Current: " + dc_current_usage + "A", 10, 40);
-        myGLCD.print("PV Power: " + RemoveLastDigit(dc_active_power) + "W", 10, 60);
+        myGLCD.print("PV Volt: " + dc_voltage_usage + "V", 1, 20);
+        myGLCD.print("PV Current: " + dc_current_usage + "A", 1, 40);
+        myGLCD.print("PV Power: " + RemoveLastDigit(dc_active_power) + "W", 1, 60);
         //Inverter
         myGLCD.setColor(255, 105, 180);
-        myGLCD.print("INV Volt: " + inv_ac_voltage_usage + "V", 10, 80);
-        myGLCD.print("INV Curr: " + inv_ac_current_usage + "A", 10, 100);
-        myGLCD.print("INV Power: " + inv_ac_active_power + "W", 10, 120);
-        myGLCD.print("INV Energy: " + RemoveLastDigit(inv_ac_active_energy) + "KWh", 10, 140);
+        myGLCD.print("INV Volt: " + inv_ac_voltage_usage + "V", 1, 80);
+        myGLCD.print("INV Curr: " + inv_ac_current_usage + "A", 1, 100);
+        myGLCD.print("INV Power: " + inv_ac_active_power + "W", 1, 120);
+        myGLCD.print("INV Energy: " + RemoveLastDigit(inv_ac_active_energy) + "KWh", 1, 140);
 
         //Main AC Power
         myGLCD.setColor(255, 105, 180);
@@ -174,7 +172,7 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
 }
 
 void displayEnvironment(String temp, String humidity, String soiMoisture) {
-    int x = 10;
+    int x = 1;
     int y = 160;
     myGLCD.setTextSize(2);
     myGLCD.setColor(0, 255, 0);

@@ -317,10 +317,11 @@ void serialEvent3() {
                     solarPanelPower = Words[6];
                     batteryCharging = Words[7];
                     batteryCapacity = Words[8];
-                    loadStatus = Words[9];
+                    loadStatus = String(Words[9]);
                     batteryVoltage = Words[10];
                     deviceStatus = Words[12];
 
+                    ledLightStage = (loadStatus == "ON");
                 } else if (deviceName == "SolarPower") {
                     humidity = Words[4];
                     temp = Words[5];
