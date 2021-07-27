@@ -149,7 +149,7 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
         myGLCD.print("PF: " + main_ac_pf, 10, 405);
 
     } else {
-        myGLCD.print(" (Hi-Volt Inverter) ", 10, 1);
+        myGLCD.print(" (Hi-Volt Inverter) ", 5, 1);
         myGLCD.print("PV Volt: " + dc_voltage_usage + "V", 1, 20);
         myGLCD.print("PV Current: " + dc_current_usage + "A", 1, 40);
         myGLCD.print("PV Power: " + RemoveLastDigit(dc_active_power) + "W", 1, 60);
@@ -162,7 +162,7 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
 
         //Main AC Power
         myGLCD.setColor(255, 105, 180);
-        myGLCD.print(" (Main AC) ", 290, 1);
+        myGLCD.print(" (Main AC) ", 300, 1);
         myGLCD.print("Voltage: " + main_ac_voltage_usage + "V", 260, 20);
         myGLCD.print("Current: " + main_ac_current_usage + "A", 260, 40);
         myGLCD.print("Power: " + main_ac_active_power + "W", 260, 60);
