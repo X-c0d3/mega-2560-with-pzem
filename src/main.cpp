@@ -74,7 +74,7 @@ bool inverterState, coolingFanState, ledLightStage, spotLightState,
     waterFallPumpStage, waterThePlantStage, waterSpinklerStage;
 
 String solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryVoltage,
-    batteryCharging, batteryCapacity, loadStatus;
+    batteryCharging, batteryCapacity, loadStatus, deviceStatus;
 
 String dc_voltage_usage, dc_current_usage, dc_active_power,
     dc_active_energy, dc_active_energy_raw,
@@ -107,7 +107,7 @@ void displayData() {
                       main_ac_active_power,
                       main_ac_active_energy,
                       main_ac_frequency, main_ac_pf);
-    displayControlChargerInfo(solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryVoltage, batteryCharging, batteryCapacity, loadStatus);
+    displayControlChargerInfo(solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryVoltage, batteryCharging, batteryCapacity, loadStatus, deviceStatus);
     displayEnvironment(temp, humidity, soiMoisture);
     displaySwitch(inverterState, coolingFanState, ledLightStage, spotLightState, powerBackupStage,
                   livingRoomLightStage, gadenLightStage, waterFallPumpStage,
@@ -319,6 +319,7 @@ void serialEvent3() {
                     batteryCapacity = Words[8];
                     loadStatus = Words[9];
                     batteryVoltage = Words[10];
+                    deviceStatus = Words[12];
 
                 } else if (deviceName == "SolarPower") {
                     humidity = Words[4];
