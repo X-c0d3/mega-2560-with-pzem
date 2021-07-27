@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <UTFTGLUE.h>
-// FOR 3.5 TFT LCD Shield
+// FOR 3.5 TFT LCD Shield ILI9486 480X320
 
 // LCD_RST  = A4
 // LCD_CS   = A3
@@ -24,7 +24,17 @@
 // - can use 5V (No need 3.3V)
 
 UTFTGLUE myGLCD(0, A2, A1, A3, A4, A0);  //all dummy args
-int rotation = 3;                        //Vertical : 0, Holizontal : 3
+int rotation = 3;
+
+#define BLACK 0x0000
+#define BLUE 0x001F
+#define RED 0xF800
+#define GREEN 0x07E0
+#define CYAN 0x07FF
+#define MAGENTA 0xF81F
+#define YELLOW 0xFFE0
+#define WHITE 0xFFFF
+#define olive 0x7BE0  //Vertical : 0, Holizontal : 3
 
 void setupDisplay() {
     randomSeed(analogRead(0));
@@ -158,7 +168,6 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
         myGLCD.print("Voltage: " + main_ac_voltage_usage + "V", 260, 40);
         myGLCD.print("Current: " + main_ac_current_usage + "A", 260, 60);
         myGLCD.print("Power: " + main_ac_active_power + "W", 260, 80);
-
         myGLCD.print("Energy: " + RemoveLastDigit(main_ac_active_energy) + "KWh", 260, 100);
         myGLCD.print("PF: " + main_ac_pf + " FQ " + main_ac_frequency + "Hz", 260, 120);
     }
@@ -219,6 +228,10 @@ void refreshScreen() {
         myGLCD.flush();
         myGLCD.clearWriteError();
     }
+}
+
+void ClearDisplay() {
+    myGLCD.clrScr();
 }
 
 #endif

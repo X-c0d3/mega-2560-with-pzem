@@ -357,7 +357,10 @@ void serialEvent3() {
                     waterSpinklerStage = String(Words[7]) == "ON";
                 } else if (deviceName == "SmartGarden") {
                     waterFallPumpStage = String(Words[4]) == "ON";
+                } else if (deviceName == "Clear") {
+                    ClearDisplay();
                 }
+
             } else {
                 Serial.println(" ***** Check Sum Error ***** => Check Sum:" + String(ckSum) + " Ori Size:" + String(sizeData) + " digits:" + digits(ckSum) + " word_count:" + word_count);
             }
