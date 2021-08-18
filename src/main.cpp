@@ -89,8 +89,10 @@ String dc_voltage_usage, dc_current_usage, dc_active_power,
     main_ac_active_power,
     main_ac_active_energy,
     main_ac_frequency,
-    main_ac_pf;
-
+    main_ac_pf,
+    backup_ac_power,
+    backup_ac_current,
+    backup_ac_voltage;
 String deviceName;
 
 void displayData() {
@@ -106,7 +108,10 @@ void displayData() {
                       main_ac_current_usage,
                       main_ac_active_power,
                       main_ac_active_energy,
-                      main_ac_frequency, main_ac_pf);
+                      main_ac_frequency,
+                      main_ac_pf,
+                      backup_ac_power,
+                      backup_ac_current);
     displayControlChargerInfo(solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryVoltage, batteryCharging, batteryCapacity, loadStatus, deviceStatus);
     displayEnvironment(temp, humidity, soiMoisture);
     displaySwitch(inverterState, coolingFanState, ledLightStage, spotLightState, powerBackupStage,
@@ -346,6 +351,13 @@ void serialEvent3() {
                     ledLightStage = (loadStatus == "ON") ? true : String(Words[19]) == "ON";
                     spotLightState = String(Words[20]) == "ON";
                     powerBackupStage = String(Words[21]) == "ON";
+                } else if (deviceName == "SOLAR_BACKUP") {
+                    backup_ac_voltage = Words[4];
+                    backup_ac_current = Words[5];
+                    backup_ac_power = Words[6];
+                    // backup_ac_active_energy = Words[7];
+                    // backup_ac_frequency = Words[8];
+                    // backup_ac_pf = Words[9];
                 } else if (deviceName == "MainPower") {
                     main_ac_voltage_usage = Words[4];
                     main_ac_current_usage = Words[5];
