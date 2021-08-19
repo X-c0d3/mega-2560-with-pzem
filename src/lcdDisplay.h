@@ -228,7 +228,7 @@ void showDeviceInfo(String ipAddress, String lastUpdate) {
     if (IsLoadEnabled) {
         if (rotation == 0) {
         } else {
-            myGLCD.print("IP:" + ipAddress + "          " + lastUpdate + "  ", marginLeftSeconds, y + 8);
+            myGLCD.print("IP:" + ipAddress + "           " + lastUpdate + "  ", marginLeftSeconds, y + 8);
         }
     }
 }
