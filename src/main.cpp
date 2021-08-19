@@ -311,9 +311,9 @@ void serialEvent3() {
             ipAddress = Words[2];
             lastUpdate = Words[3];
 
-            if (deviceName == "Clear") {
-                ClearDisplay();
-            }
+            // if (deviceName == "Clear") {
+            //     ClearDisplay();
+            // }
 
             if (word_count > MIN_WORLD_COUNT && ckSum == (sizeData - digits(ckSum))) {
                 if (deviceName == "SOLAR_CHARGER") {
