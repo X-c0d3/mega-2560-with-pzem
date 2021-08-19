@@ -142,7 +142,7 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
         myGLCD.print("Energy: " + dc_active_energy + "KWh", 1, 100);
 
         myGLCD.setColor(255, 105, 180);
-        myGLCD.print(" (Main AC) ", 20, 285);
+        myGLCD.print(" (Main AC) ", 20, 280);
         myGLCD.print("Voltage: " + main_ac_voltage_usage + "V", 10, 305);
         myGLCD.print("Current: " + main_ac_current_usage + "A", 10, 325);
         myGLCD.print("Power: " + main_ac_active_power + "W", 10, 345);
@@ -157,21 +157,23 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
         myGLCD.print("PV Power: " + dc_active_power + " W  ", 1, 60);
         //Inverter
         myGLCD.setColor(255, 105, 180);
-        myGLCD.print("INV Volt: " + inv_ac_voltage_usage + " V  ", 1, 80);
-        myGLCD.print("INV Curr: " + inv_ac_current_usage + " A  ", 1, 100);
-        myGLCD.print("INV Power: " + inv_ac_active_power + " W    ", 1, 120);
-        myGLCD.print("INV Energy: " + inv_ac_active_energy + " KWh    ", 1, 140);
+        if (inv_ac_voltage_usage != "0") {
+            myGLCD.print("INV Volt: " + inv_ac_voltage_usage + " V  ", 1, 80);
+            myGLCD.print("INV Curr: " + inv_ac_current_usage + " A  ", 1, 100);
+            myGLCD.print("INV Power: " + inv_ac_active_power + " W    ", 1, 120);
+            myGLCD.print("INV Energy: " + inv_ac_active_energy + " KWh    ", 1, 140);
+        }
 
         //Main AC Power
         myGLCD.setColor(255, 105, 180);
-        myGLCD.print(" (Main AC) ", 300, 1);
-        myGLCD.print("Voltage: " + main_ac_voltage_usage + " V  ", 260, 20);
-        myGLCD.print("Current: " + main_ac_current_usage + " A  ", 260, 40);
-        myGLCD.print("Power: " + main_ac_active_power + " W  ", 260, 60);
-        myGLCD.print("Energy: " + main_ac_active_energy + " KWh    ", 260, 80);
-        myGLCD.print("PF: " + main_ac_pf + " FQ " + main_ac_frequency + " Hz ", 260, 100);
+        myGLCD.print(" (Main AC) ", 305, 1);
+        myGLCD.print("Voltage: " + main_ac_voltage_usage + " V  ", 250, 20);
+        myGLCD.print("Current: " + main_ac_current_usage + " A  ", 250, 40);
+        myGLCD.print("Power: " + main_ac_active_power + " W  ", 250, 60);
+        myGLCD.print("Energy: " + main_ac_active_energy + " KWh    ", 250, 80);
+        myGLCD.print("PF: " + main_ac_pf + " FQ " + main_ac_frequency + " Hz ", 250, 100);
         myGLCD.setColor(RED);
-        myGLCD.print("Backup: " + backup_ac_power + " W " + backup_ac_current + "A ", 260, 120);
+        myGLCD.print("Backup: " + backup_ac_power + " W " + backup_ac_current + "A ", 250, 120);
     }
 }
 
@@ -201,15 +203,15 @@ void displayControlChargerInfo(String solarPanelVoltage, String solarPanelCurren
 
     } else {
         myGLCD.print(" (MPPT Charger) ", 270, 140);
-        myGLCD.print("Bat Volt: " + batteryVoltage + " V ", 260, 160);      //batteryVoltage
-        myGLCD.print("Bat Capacity: " + batteryCapacity + "%", 260, 180);   //batteryCapacity
-        myGLCD.print("Charge Curr: " + batteryCharging + " A", 260, 200);   //batteryCharging
-        myGLCD.print("PV Volt: " + solarPanelVoltage + " V  ", 260, 220);   //solarPanelVoltage
-        myGLCD.print("PV Curr.: " + solarPanelCurrent + " A  ", 260, 240);  //solarPanelCurrent
-        myGLCD.print("PV Power: " + solarPanelPower + " W  ", 260, 260);    //solarPanelPower
-        myGLCD.print("Load Status: " + loadStatus, 260, 280);               //loadStatus
+        myGLCD.print("Bat Volt: " + batteryVoltage + " V ", 250, 160);      //batteryVoltage
+        myGLCD.print("Bat Capacity: " + batteryCapacity + " %", 250, 180);  //batteryCapacity
+        myGLCD.print("Charge Curr: " + batteryCharging + " A", 250, 200);   //batteryCharging
+        myGLCD.print("PV Volt: " + solarPanelVoltage + " V  ", 250, 220);   //solarPanelVoltage
+        myGLCD.print("PV Curr.: " + solarPanelCurrent + " A  ", 250, 240);  //solarPanelCurrent
+        myGLCD.print("PV Power: " + solarPanelPower + " W  ", 250, 260);    //solarPanelPower
+        myGLCD.print("Load Status: " + loadStatus, 250, 280);               //loadStatus
         myGLCD.setColor(MAGENTA);
-        myGLCD.print(deviceStatus, 260, 300);  //deviceStatus
+        myGLCD.print(deviceStatus, 250, 300);  //deviceStatus
     }
 }
 
