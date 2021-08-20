@@ -155,9 +155,9 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
 
     } else {
         myGLCD.print(" (Hi-Volt Inverter) ", marginLeft + 4, 1);
-        myGLCD.print("PV Volt: " + dc_voltage_usage + " V  ", marginLeft, 20);
+        myGLCD.print("PV Volt: " + dc_voltage_usage + " V      ", marginLeft, 20);
         myGLCD.print("PV Current: " + dc_current_usage + " A  ", marginLeft, 40);
-        myGLCD.print("PV Power: " + dc_active_power + " W  ", marginLeft, 60);
+        myGLCD.print("PV Power: " + dc_active_power + " W    ", marginLeft, 60);
         //Inverter
         myGLCD.setColor(255, 105, 180);
         if (inv_ac_voltage_usage != "0") {
@@ -184,8 +184,8 @@ void displayEnvironment(String temp, String humidity, String soiMoisture) {
     int y = 160;
     myGLCD.setTextSize(2);
     myGLCD.setColor(0, 255, 0);
-    myGLCD.print("Temp: " + temp + " C  ", marginLeft, y);
-    myGLCD.print("Humidity: " + humidity + " %  ", marginLeft, y + 20);
+    myGLCD.print("Temp: " + temp + " C       ", marginLeft, y);
+    myGLCD.print("Humidity: " + humidity + " %     ", marginLeft, y + 20);
     myGLCD.print("Soi Moisture: " + soiMoisture + "  ", marginLeft, y + 40);
 }
 
@@ -207,7 +207,7 @@ void displayControlChargerInfo(String solarPanelVoltage, String solarPanelCurren
     } else {
         myGLCD.print(" (MPPT Charger) ", 270, 140);
         myGLCD.print("Bat Volt: " + batteryVoltage + " V ", marginLeftSeconds, 160);        //batteryVoltage
-        myGLCD.print("Bat Capacity: " + batteryCapacity + " % ", marginLeftSeconds, 180);   //batteryCapacity
+        myGLCD.print("Bat Capacity: " + batteryCapacity + "% ", marginLeftSeconds, 180);    //batteryCapacity
         myGLCD.print("Charge Curr: " + batteryCharging + " A ", marginLeftSeconds, 200);    //batteryCharging
         myGLCD.print("PV Volt: " + solarPanelVoltage + " V    ", marginLeftSeconds, 220);   //solarPanelVoltage
         myGLCD.print("PV Curr.: " + solarPanelCurrent + " A    ", marginLeftSeconds, 240);  //solarPanelCurrent
