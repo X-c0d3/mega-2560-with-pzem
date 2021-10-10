@@ -74,7 +74,7 @@ bool inverterState, coolingFanState, ledLightStage, spotLightState,
     waterFallPumpStage, waterThePlantStage, waterSpinklerStage;
 
 String solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryVoltage,
-    batteryCharging, batteryCapacity, loadStatus, deviceStatus;
+    batteryCharging, batteryCapacity, loadStatus, deviceStatus, loadCurrent, loadPower, chargerTemp, chargeAmount;
 
 String dc_voltage_usage, dc_current_usage, dc_active_power,
     dc_active_energy, dc_active_energy_raw,
@@ -90,9 +90,13 @@ String dc_voltage_usage, dc_current_usage, dc_active_power,
     main_ac_active_energy,
     main_ac_frequency,
     main_ac_pf,
+    backup_ac_voltage,
     backup_ac_power,
     backup_ac_current,
-    backup_ac_voltage;
+    backup_ac_energy,
+    backup_ac_frequency,
+    backup_ac_pf;
+
 String deviceName;
 
 void displayData() {
@@ -110,9 +114,12 @@ void displayData() {
                       main_ac_active_energy,
                       main_ac_frequency,
                       main_ac_pf,
+                      backup_ac_voltage,
                       backup_ac_power,
-                      backup_ac_current);
-    displayControlChargerInfo(solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryVoltage, batteryCharging, batteryCapacity, loadStatus, deviceStatus);
+                      backup_ac_current,
+                      backup_ac_energy,
+                      backup_ac_frequency, backup_ac_pf);
+    displayControlChargerInfo(solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryVoltage, batteryCharging, batteryCapacity, loadStatus, deviceStatus, loadCurrent, loadPower, chargerTemp, chargeAmount);
     displayEnvironment(temp, humidity, soiMoisture);
     displaySwitch(inverterState, coolingFanState, ledLightStage, spotLightState, powerBackupStage,
                   livingRoomLightStage, gadenLightStage, waterFallPumpStage,
@@ -324,9 +331,12 @@ void serialEvent3() {
                     batteryCapacity = Words[8];
                     loadStatus = String(Words[9]);
                     batteryVoltage = Words[10];
+                    chargerTemp = Words[11];
                     deviceStatus = Words[12];
-
                     ledLightStage = (loadStatus == "ON");
+                    loadCurrent = Words[13];
+                    loadPower = Words[14];
+                    chargeAmount = Words[15];
                 } else if (deviceName == "SolarPower") {
                     humidity = Words[4];
                     temp = Words[5];
@@ -355,9 +365,9 @@ void serialEvent3() {
                     backup_ac_voltage = Words[4];
                     backup_ac_current = Words[5];
                     backup_ac_power = Words[6];
-                    // backup_ac_active_energy = Words[7];
-                    // backup_ac_frequency = Words[8];
-                    // backup_ac_pf = Words[9];
+                    backup_ac_energy = Words[7];
+                    backup_ac_frequency = Words[8];
+                    backup_ac_pf = Words[9];
                 } else if (deviceName == "MainPower") {
                     main_ac_voltage_usage = Words[4];
                     main_ac_current_usage = Words[5];
