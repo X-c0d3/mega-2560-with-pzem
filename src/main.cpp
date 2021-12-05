@@ -22,25 +22,25 @@
 // PZEM004Tv30 pzem04t(&Serial2);
 DHTesp dht;
 
-//WireSerial (RX/TX) - Cable
-//SoftwareSerial wireSerial(11, 10);  // RX/TX Define hardware
+// WireSerial (RX/TX) - Cable
+// SoftwareSerial wireSerial(11, 10);  // RX/TX Define hardware
 
 void setup() {
     Serial.begin(DEFAULT_BAUD_RATE);
     //  wireSerial.begin(9600);
     Serial3.begin(76800);
 
-    dht.setup(DHTpin, DHTesp::DHT11);  //for DHT11 Connect DHT sensor to GPIO 15
+    dht.setup(DHTpin, DHTesp::DHT11);  // for DHT11 Connect DHT sensor to GPIO 15
 
     // initialize digital pin LED_BUILTIN as an output.
     pinMode(LED_BUILTIN, OUTPUT);
     delay(2000);
 
-    //pzem017.setCurrentShunt(0x0001);
-    // pzem017.setHIVoltageAlarm(HIGHT_VOLTAGE);
-    // pzem017.setLOWVoltageAlarm(LOW_VOLTAGE);
+    // pzem017.setCurrentShunt(0x0001);
+    //  pzem017.setHIVoltageAlarm(HIGHT_VOLTAGE);
+    //  pzem017.setLOWVoltageAlarm(LOW_VOLTAGE);
 
-    //pzem017.resetEnergy();
+    // pzem017.resetEnergy();
     setupDisplay();
 }
 
@@ -49,15 +49,15 @@ void setup() {
 char *Words[MAX_WORLD_COUNT];
 
 byte split_message(char *str) {
-    byte word_count = 0;            //number of words
-    char *item = strtok(str, "|");  //getting first word (uses space & comma as delimeter)
+    byte word_count = 0;            // number of words
+    char *item = strtok(str, "|");  // getting first word (uses space & comma as delimeter)
 
     while (item != NULL) {
         if (word_count >= MAX_WORLD_COUNT) {
             break;
         }
         Words[word_count] = item;
-        item = strtok(NULL, "|");  //getting subsequence word
+        item = strtok(NULL, "|");  // getting subsequence word
         word_count++;
     }
     return word_count;
@@ -130,13 +130,13 @@ void displayData() {
 }
 
 void loop() {
-    //Recived Data
-    //static String jsonResponse = "";
-    // while (wireSerial.available() > 0) {
-    //     String jsonResponse = wireSerial.readString();
-    //     //char inChar = wireSerial.read();
-    //     //jsonResponse += inChar;
-    //     //if (inChar == '\r') {
+    // Recived Data
+    // static String jsonResponse = "";
+    //  while (wireSerial.available() > 0) {
+    //      String jsonResponse = wireSerial.readString();
+    //      //char inChar = wireSerial.read();
+    //      //jsonResponse += inChar;
+    //      //if (inChar == '\r') {
 
     //     Serial.println(".");
     //     DynamicJsonBuffer jsonBuffer;
@@ -166,7 +166,7 @@ void loop() {
     //     //}
     // }
 
-    //Send Data
+    // Send Data
     static uint32_t last_send = millis();
     if (millis() - last_send > 1000) {
         last_send = millis();
@@ -341,14 +341,14 @@ void serialEvent3() {
                     humidity = Words[4];
                     temp = Words[5];
 
-                    //DC
+                    // DC
                     dc_voltage_usage = Words[6];
                     dc_current_usage = Words[7];
                     dc_active_power = Words[8];
                     dc_active_energy = Words[9];
                     dc_active_energy_raw = Words[10];
 
-                    //AC
+                    // AC
                     inv_ac_voltage_usage = Words[11];
                     inv_ac_current_usage = Words[12];
                     inv_ac_active_power = Words[13];
@@ -361,7 +361,7 @@ void serialEvent3() {
                     ledLightStage = (loadStatus == "ON") ? true : String(Words[19]) == "ON";
                     spotLightState = String(Words[20]) == "ON";
                     powerBackupStage = String(Words[21]) == "ON";
-                } else if (deviceName == "SOLAR_BACKUP") {
+                } else if (deviceName == "PowerBackup") {
                     backup_ac_voltage = Words[4];
                     backup_ac_current = Words[5];
                     backup_ac_power = Words[6];
@@ -380,7 +380,7 @@ void serialEvent3() {
                     livingRoomLightStage = String(Words[5]) == "ON";
                 } else if (deviceName == "FarmBot") {
                     soiMoisture = String(Words[4]);
-                    //soiMoisture_Raw = Words[5];
+                    // soiMoisture_Raw = Words[5];
                     waterThePlantStage = String(Words[6]) == "ON";
                     waterSpinklerStage = String(Words[7]) == "ON";
                 } else if (deviceName == "SmartGarden") {
