@@ -323,21 +323,7 @@ void serialEvent3() {
             }
 
             if (word_count > MIN_WORLD_COUNT && ckSum == (sizeData - digits(ckSum))) {
-                if (deviceName == "SOLAR_CHARGER") {
-                    solarPanelVoltage = Words[4];
-                    solarPanelCurrent = Words[5];
-                    solarPanelPower = Words[6];
-                    batteryCharging = Words[7];
-                    batteryCapacity = Words[8];
-                    loadStatus = String(Words[9]);
-                    batteryVoltage = Words[10];
-                    chargerTemp = Words[11];
-                    deviceStatus = Words[12];
-                    ledLightStage = (loadStatus == "ON");
-                    loadCurrent = Words[13];
-                    loadPower = Words[14];
-                    chargeAmount = Words[15];
-                } else if (deviceName == "SolarPower") {
+                if (deviceName == "SolarPower") {
                     humidity = Words[4];
                     temp = Words[5];
 
@@ -362,12 +348,27 @@ void serialEvent3() {
                     spotLightState = String(Words[20]) == "ON";
                     powerBackupStage = String(Words[21]) == "ON";
                 } else if (deviceName == "PowerBackup") {
+                    // Pzem 004tv3
                     backup_ac_voltage = Words[4];
                     backup_ac_current = Words[5];
                     backup_ac_power = Words[6];
                     backup_ac_energy = Words[7];
                     backup_ac_frequency = Words[8];
                     backup_ac_pf = Words[9];
+                    // Solar Charger
+                    solarPanelVoltage = Words[10];
+                    solarPanelCurrent = Words[11];
+                    solarPanelPower = Words[12];
+                    batteryCharging = Words[13];
+                    batteryCapacity = Words[14];
+                    loadStatus = String(Words[15]);
+                    batteryVoltage = Words[16];
+                    chargerTemp = Words[17];
+                    deviceStatus = Words[18];
+                    ledLightStage = (loadStatus == "ON");
+                    loadCurrent = Words[19];
+                    loadPower = Words[20];
+                    chargeAmount = Words[21];
                 } else if (deviceName == "MainPower") {
                     main_ac_voltage_usage = Words[4];
                     main_ac_current_usage = Words[5];
