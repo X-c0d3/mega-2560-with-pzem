@@ -23,7 +23,7 @@
 
 // - can use 5V (No need 3.3V)
 
-UTFTGLUE myGLCD(0, A2, A1, A3, A4, A0);  //all dummy args
+UTFTGLUE myGLCD(0, A2, A1, A3, A4, A0);  // all dummy args
 int rotation = 3;
 
 #define BLACK 0x0000
@@ -34,7 +34,7 @@ int rotation = 3;
 #define MAGENTA 0xF81F
 #define YELLOW 0xFFE0
 #define WHITE 0xFFFF
-#define olive 0x7BE0  //Vertical : 0, Holizontal : 3
+#define olive 0x7BE0  // Vertical : 0, Holizontal : 3
 
 void setupDisplay() {
     randomSeed(analogRead(0));
@@ -182,7 +182,7 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
             myGLCD.print("PF: " + backup_ac_pf + " FQC: " + backup_ac_frequency + " Hz ", marginLeft, 100);
         }
 
-        //Main AC Power
+        // Main AC Power
         myGLCD.setColor(255, 105, 180);
         myGLCD.print(" (PEA Main AC) ", 270, 1);
         myGLCD.print("Voltage: " + main_ac_voltage_usage + " V  ", marginLeftSeconds, 20);
@@ -211,7 +211,7 @@ bool IsLoadEnabled = false;
 void displayControlChargerInfo(String solarPanelVoltage, String solarPanelCurrent,
                                String solarPanelPower, String batteryVoltage, String batteryCharging, String batteryCapacity, String loadStatus, String deviceStatus,
                                String loadCurrent, String loadPower, String chargerTemp, String chargeAmount) {
-    //SOLAR_CHARGER
+    // SOLAR_CHARGER
     myGLCD.setTextSize(2);
     myGLCD.setColor(0, 255, 255);
     if (rotation == 0) {
@@ -225,28 +225,28 @@ void displayControlChargerInfo(String solarPanelVoltage, String solarPanelCurren
 
     } else {
         myGLCD.print(" (MPPT Charger) ", 270, 140);
-        myGLCD.print("Bat Volt: " + batteryVoltage + " V ", marginLeftSeconds, 160);      //batteryVoltage
-        myGLCD.print("Bat Capacity: " + batteryCapacity + "% ", marginLeftSeconds, 180);  //batteryCapacity
+        myGLCD.print("Bat Volt: " + batteryVoltage + " V ", marginLeftSeconds, 160);      // batteryVoltage
+        myGLCD.print("Bat Capacity: " + batteryCapacity + "% ", marginLeftSeconds, 180);  // batteryCapacity
 
-        if (loadStatus == "ON" && solarPanelVoltage == "0.0") {
-            //Night Mode
-            myGLCD.print("Load Curr: " + loadCurrent + " A ", marginLeftSeconds, 200);     //Load Current
-            myGLCD.print("Load Power: " + loadPower + " W ", marginLeftSeconds, 220);      //Load Power
-            myGLCD.print("Device Temp: " + chargerTemp + " C ", marginLeftSeconds, 240);   //Device Temperature
-            myGLCD.print("Charge Amnt: " + chargeAmount + " Ah", marginLeftSeconds, 260);  //Charge Amount
+        if (loadStatus == "ON" && solarPanelVoltage == "0") {
+            // Night Mode
+            myGLCD.print("Load Curr: " + loadCurrent + " A ", marginLeftSeconds, 200);     // Load Current
+            myGLCD.print("Load Power: " + loadPower + " W ", marginLeftSeconds, 220);      // Load Power
+            myGLCD.print("Device Temp: " + chargerTemp + " C ", marginLeftSeconds, 240);   // Device Temperature
+            myGLCD.print("Charge Amnt: " + chargeAmount + " Ah", marginLeftSeconds, 260);  // Charge Amount
         } else {
-            //Day Mode
-            myGLCD.print("Charge Curr: " + batteryCharging + " A ", marginLeftSeconds, 200);    //batteryCharging
-            myGLCD.print("PV Volt: " + solarPanelVoltage + " V    ", marginLeftSeconds, 220);   //solarPanelVoltage
-            myGLCD.print("PV Curr.: " + solarPanelCurrent + " A    ", marginLeftSeconds, 240);  //solarPanelCurrent
-            myGLCD.print("PV Power: " + solarPanelPower + " W  ", marginLeftSeconds, 260);      //solarPanelPower
+            // Day Mode
+            myGLCD.print("Charge Curr: " + batteryCharging + " A ", marginLeftSeconds, 200);    // batteryCharging
+            myGLCD.print("PV Volt: " + solarPanelVoltage + " V    ", marginLeftSeconds, 220);   // solarPanelVoltage
+            myGLCD.print("PV Curr.: " + solarPanelCurrent + " A    ", marginLeftSeconds, 240);  // solarPanelCurrent
+            myGLCD.print("PV Power: " + solarPanelPower + " W  ", marginLeftSeconds, 260);      // solarPanelPower
         }
 
-        myGLCD.print("Load Status: " + loadStatus, marginLeftSeconds, 280);  //loadStatus
+        myGLCD.print("Load Status: " + loadStatus, marginLeftSeconds, 280);  // loadStatus
         myGLCD.setColor(MAGENTA);
 
         deviceStatus.trim();
-        myGLCD.print((deviceStatus == "-") ? "" : deviceStatus, marginLeftSeconds, 300);  //deviceStatus
+        myGLCD.print((deviceStatus == "-") ? "" : deviceStatus, marginLeftSeconds, 300);  // deviceStatus
         IsLoadEnabled = loadStatus == "ON";
     }
 }
@@ -264,7 +264,7 @@ void showDeviceInfo(String ipAddress, String lastUpdate) {
 }
 
 void refreshScreen() {
-    //clear screen
+    // clear screen
     if (rotation == 0) {
         // myGLCD.setColor(0, 0, 0);
         // myGLCD.fillRect(1, 15, 318, 465);
