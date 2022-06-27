@@ -329,8 +329,8 @@ void serialEvent3() {
 
                     // DC
                     dc_voltage_usage = Words[6];
-                    dc_current_usage = Words[7];
-                    dc_active_power = Words[8];
+                    // dc_current_usage = Words[7];
+                    // dc_active_power = Words[8];
                     dc_active_energy = Words[9];
                     dc_active_energy_raw = Words[10];
 
@@ -347,6 +347,18 @@ void serialEvent3() {
                     ledLightStage = (loadStatus == "ON") ? true : String(Words[19]) == "ON";
                     spotLightState = String(Words[20]) == "ON";
                     powerBackupStage = String(Words[21]) == "ON";
+
+                } else if (deviceName == "BootMppt") {
+                    // DC
+                    // dc_voltage_usage = Words[4];
+                    dc_current_usage = Words[5];
+                    dc_active_power = Words[6];
+                    // temp= Words[7];
+                    // vout= Words[8];
+                    // fanshow= Words[9];
+                    // booting= Words[10];
+                    // message= Words[11];
+
                 } else if (deviceName == "PowerBackup") {
                     // Pzem 004tv3
                     backup_ac_voltage = Words[4];
