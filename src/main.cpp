@@ -89,8 +89,9 @@ String dc_voltage_usage, dc_current_usage, dc_active_power,
     main_ac_active_power,
     main_ac_active_energy,
     main_ac_frequency,
-    main_ac_pf,
-    backup_ac_voltage,
+    main_ac_pf;
+
+float backup_ac_voltage,
     backup_ac_power,
     backup_ac_current,
     backup_ac_energy,
@@ -361,12 +362,12 @@ void serialEvent3() {
 
                 } else if (deviceName == "PowerBackup") {
                     // Pzem 004tv3
-                    backup_ac_voltage = Words[4];
-                    backup_ac_current = Words[5];
-                    backup_ac_power = Words[6];
-                    backup_ac_energy = Words[7];
-                    backup_ac_frequency = Words[8];
-                    backup_ac_pf = Words[9];
+                    backup_ac_voltage = atoi(Words[4]);
+                    backup_ac_current = atoi(Words[5]);
+                    backup_ac_power = atoi(Words[6]);
+                    backup_ac_energy = atoi(Words[7]);
+                    backup_ac_frequency = atoi(Words[8]);
+                    backup_ac_pf = atoi(Words[9]);
                     // Solar Charger
                     solarPanelVoltage = Words[10];
                     solarPanelCurrent = Words[11];
