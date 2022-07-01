@@ -7,6 +7,7 @@
 #include <SoftwareSerial.h>
 #include <UTFTGLUE.h>
 
+#include "Models/Pzem.h"
 #include "config.h"
 #include "lcdDisplay.h"
 // For Mega 2560 Pro Hardware Serial
@@ -21,6 +22,8 @@
 // PZEM017 pzem017(&Serial1);
 // PZEM004Tv30 pzem04t(&Serial2);
 DHTesp dht;
+Pzem powerBackup;
+Pzem mainPower;
 
 // WireSerial (RX/TX) - Cable
 // SoftwareSerial wireSerial(11, 10);  // RX/TX Define hardware
@@ -83,20 +86,7 @@ String dc_voltage_usage, dc_current_usage, dc_active_power,
     inv_ac_active_power,
     inv_ac_active_energy,
     inv_ac_frequency,
-    inv_ac_pf,
-    main_ac_voltage_usage,
-    main_ac_current_usage,
-    main_ac_active_power,
-    main_ac_active_energy,
-    main_ac_frequency,
-    main_ac_pf;
-
-float backup_ac_voltage,
-    backup_ac_power,
-    backup_ac_current,
-    backup_ac_energy,
-    backup_ac_frequency,
-    backup_ac_pf;
+    inv_ac_pf;
 
 String deviceName;
 
@@ -109,17 +99,8 @@ void displayData() {
                       inv_ac_active_energy,
                       inv_ac_frequency,
                       inv_ac_pf,
-                      main_ac_voltage_usage,
-                      main_ac_current_usage,
-                      main_ac_active_power,
-                      main_ac_active_energy,
-                      main_ac_frequency,
-                      main_ac_pf,
-                      backup_ac_voltage,
-                      backup_ac_power,
-                      backup_ac_current,
-                      backup_ac_energy,
-                      backup_ac_frequency, backup_ac_pf);
+                      mainPower,
+                      powerBackup);
     displayControlChargerInfo(solarPanelVoltage, solarPanelCurrent, solarPanelPower, batteryVoltage, batteryCharging, batteryCapacity, loadStatus, deviceStatus, loadCurrent, loadPower, chargerTemp, chargeAmount);
     displayEnvironment(temp, humidity, soiMoisture);
     displaySwitch(inverterState, coolingFanState, ledLightStage, spotLightState, powerBackupStage,
@@ -362,12 +343,12 @@ void serialEvent3() {
 
                 } else if (deviceName == "PowerBackup") {
                     // Pzem 004tv3
-                    backup_ac_voltage = atoi(Words[4]);
-                    backup_ac_current = atoi(Words[5]);
-                    backup_ac_power = atoi(Words[6]);
-                    backup_ac_energy = atoi(Words[7]);
-                    backup_ac_frequency = atoi(Words[8]);
-                    backup_ac_pf = atoi(Words[9]);
+                    powerBackup.voltage = atoi(Words[4]);
+                    powerBackup.current = atoi(Words[5]);
+                    powerBackup.power = atoi(Words[6]);
+                    powerBackup.energy = atoi(Words[7]);
+                    powerBackup.frequency = atoi(Words[8]);
+                    powerBackup.pf = atoi(Words[9]);
                     // Solar Charger
                     solarPanelVoltage = Words[10];
                     solarPanelCurrent = Words[11];
@@ -383,12 +364,12 @@ void serialEvent3() {
                     loadPower = Words[20];
                     chargeAmount = Words[21];
                 } else if (deviceName == "MainPower") {
-                    main_ac_voltage_usage = Words[4];
-                    main_ac_current_usage = Words[5];
-                    main_ac_active_power = Words[6];
-                    main_ac_active_energy = Words[7];
-                    main_ac_frequency = Words[8];
-                    main_ac_pf = Words[9];
+                    mainPower.voltage = atoi(Words[4]);
+                    mainPower.current = atoi(Words[5]);
+                    mainPower.power = atoi(Words[6]);
+                    mainPower.energy = atoi(Words[7]);
+                    mainPower.frequency = atoi(Words[8]);
+                    mainPower.pf = atoi(Words[9]);
                 } else if (deviceName == "HomeControl") {
                     gadenLightStage = String(Words[4]) == "ON";
                     livingRoomLightStage = String(Words[5]) == "ON";

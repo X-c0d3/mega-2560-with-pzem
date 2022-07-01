@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <UTFTGLUE.h>
+
+#include "Models/Pzem.h"
 // FOR 3.5 TFT LCD Shield ILI9486 480X320
 
 // LCD_RST  = A4
@@ -123,18 +125,8 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
                        String inv_ac_active_energy,
                        String inv_ac_frequency,
                        String inv_ac_pf,
-                       String main_ac_voltage_usage,
-                       String main_ac_current_usage,
-                       String main_ac_active_power,
-                       String main_ac_active_energy,
-                       String main_ac_frequency,
-                       String main_ac_pf,
-                       float backup_ac_voltage,
-                       float backup_ac_power,
-                       float backup_ac_current,
-                       float backup_ac_energy,
-                       float backup_ac_frequency,
-                       float backup_ac_pf) {
+                       Pzem mainPower,
+                       Pzem powerBackup) {
     myGLCD.setColor(255, 255, 0);
     myGLCD.setBackColor(0, 0, 0);
     myGLCD.setTextSize(2);
@@ -148,12 +140,12 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
 
         myGLCD.setColor(255, 105, 180);
         myGLCD.print(" (PEA Main AC) ", 20, 280);
-        myGLCD.print("Voltage: " + main_ac_voltage_usage + "V", 10, 305);
-        myGLCD.print("Current: " + main_ac_current_usage + "A", 10, 325);
-        myGLCD.print("Power: " + main_ac_active_power + "W", 10, 345);
-        myGLCD.print("Energy: " + main_ac_active_energy + "KWh", 10, 365);
-        myGLCD.print("Freq: " + main_ac_frequency + "Hz", 10, 385);
-        myGLCD.print("PF: " + main_ac_pf, 10, 405);
+        myGLCD.print("Voltage: " + String(mainPower.voltage) + "V", 10, 305);
+        myGLCD.print("Current: " + String(mainPower.current) + "A", 10, 325);
+        myGLCD.print("Power: " + String(mainPower.power) + "W", 10, 345);
+        myGLCD.print("Energy: " + String(mainPower.energy) + "KWh", 10, 365);
+        myGLCD.print("Freq: " + String(mainPower.frequency) + "Hz", 10, 385);
+        myGLCD.print("PF: " + String(mainPower.pf), 10, 405);
 
     } else {
         if (inv_ac_voltage_usage != "0") {
@@ -175,29 +167,29 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
         if (dc_voltage_usage == "0" && inv_ac_voltage_usage == "0") {
             myGLCD.setColor(255, 255, 0);
             myGLCD.print(" (BackUp) ", marginLeft + 25, 1);
-            myGLCD.print("Voltage: " + String(backup_ac_voltage, 0) + " V     ", marginLeft, 20);
-            myGLCD.print("Current: " + String(backup_ac_current, 1) + " A    ", marginLeft, 40);
-            myGLCD.print("Power: " + String(backup_ac_power, 0) + " W   ", marginLeft, 60);
-            myGLCD.print("Energy: " + String(backup_ac_energy, 1) + " KWh  ", marginLeft, 80);
-            myGLCD.print("PF: " + String(backup_ac_pf, 1) + " FQC: " + backup_ac_frequency + " Hz ", marginLeft, 100);
+            myGLCD.print("Voltage: " + String(powerBackup.voltage, 0) + " V     ", marginLeft, 20);
+            myGLCD.print("Current: " + String(powerBackup.current, 1) + " A    ", marginLeft, 40);
+            myGLCD.print("Power: " + String(powerBackup.power, 0) + " W   ", marginLeft, 60);
+            myGLCD.print("Energy: " + String(powerBackup.energy, 1) + " KWh  ", marginLeft, 80);
+            myGLCD.print("PF: " + String(powerBackup.pf, 1) + " FQC: " + powerBackup.frequency + " Hz ", marginLeft, 100);
         }
 
         // Main AC Power
         myGLCD.setColor(255, 105, 180);
         myGLCD.print(" (PEA Main AC) ", 270, 1);
-        myGLCD.print("Voltage: " + main_ac_voltage_usage + " V  ", marginLeftSeconds, 20);
-        myGLCD.print("Current: " + main_ac_current_usage + " A  ", marginLeftSeconds, 40);
-        myGLCD.print("Power: " + main_ac_active_power + " W  ", marginLeftSeconds, 60);
-        myGLCD.print("Energy: " + main_ac_active_energy + " KWh    ", marginLeftSeconds, 80);
-        myGLCD.print("PF: " + main_ac_pf + " FQC: " + main_ac_frequency + " Hz ", marginLeftSeconds, 100);
+        myGLCD.print("Voltage: " + String(mainPower.voltage) + " V  ", marginLeftSeconds, 20);
+        myGLCD.print("Current: " + String(mainPower.current) + " A  ", marginLeftSeconds, 40);
+        myGLCD.print("Power: " + String(mainPower.power) + " W  ", marginLeftSeconds, 60);
+        myGLCD.print("Energy: " + String(mainPower.energy) + " KWh    ", marginLeftSeconds, 80);
+        myGLCD.print("PF: " + String(mainPower.pf) + " FQC: " + String(mainPower.frequency) + " Hz ", marginLeftSeconds, 100);
 
         if (dc_voltage_usage != "0") {
-            if (backup_ac_power >= 10)
+            if (powerBackup.power >= 10)
                 myGLCD.setColor(RED);
             else
                 myGLCD.setColor(0, 255, 0);
 
-            myGLCD.print("Backup: " + String(backup_ac_power, 0) + " W " + String(backup_ac_current, 1) + "A ", marginLeftSeconds, 120);
+            myGLCD.print("Backup: " + String(powerBackup.power, 0) + " W " + String(powerBackup.current, 1) + "A ", marginLeftSeconds, 120);
         }
     }
 }
