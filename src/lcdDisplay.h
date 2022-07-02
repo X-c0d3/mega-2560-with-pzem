@@ -117,26 +117,21 @@ void displaySwitch(bool inverterState, bool coolingFanState, bool ledLightStage,
 
 int marginLeft = 8;
 int marginLeftSeconds = 250;
-void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String dc_active_power,
-                       String dc_active_energy, String dc_active_energy_raw,
-                       String inv_ac_voltage_usage,
-                       String inv_ac_current_usage,
-                       String inv_ac_active_power,
-                       String inv_ac_active_energy,
-                       String inv_ac_frequency,
-                       String inv_ac_pf,
-                       Pzem mainPower,
-                       Pzem powerBackup) {
+void displayPzemSensor(
+    Pzem solarDCmeter,
+    Pzem solarInverter,
+    Pzem mainPower,
+    Pzem powerBackup) {
     myGLCD.setColor(255, 255, 0);
     myGLCD.setBackColor(0, 0, 0);
     myGLCD.setTextSize(2);
 
     if (rotation == 0) {
         myGLCD.print(" (High Volt Inverter) ", 20, 20);
-        myGLCD.print("PV Volt: " + dc_voltage_usage + "V", marginLeft, 40);
-        myGLCD.print("PV Current: " + dc_current_usage + "A", marginLeft, 60);
-        myGLCD.print("PV Power: " + dc_active_power + "W", marginLeft, 80);
-        myGLCD.print("Energy: " + dc_active_energy + "KWh", marginLeft, 100);
+        myGLCD.print("PV Volt: " + String(solarDCmeter.voltage, 0) + "V", marginLeft, 40);
+        myGLCD.print("PV Current: " + String(solarDCmeter.current, 1) + "A", marginLeft, 60);
+        myGLCD.print("PV Power: " + String(solarDCmeter.power) + "W", marginLeft, 80);
+        myGLCD.print("Energy: " + String(solarDCmeter.energy, 1) + "KWh", marginLeft, 100);
 
         myGLCD.setColor(255, 105, 180);
         myGLCD.print(" (PEA Main AC) ", 20, 280);
@@ -148,23 +143,23 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
         myGLCD.print("PF: " + String(mainPower.pf), 10, 405);
 
     } else {
-        if (inv_ac_voltage_usage != "0") {
+        if (solarInverter.voltage > 0) {
             myGLCD.print(" (Hi-Volt Inverter) ", marginLeft + 4, 1);
-            myGLCD.print("INV Volt: " + inv_ac_voltage_usage + " V     ", marginLeft, 20);
-            myGLCD.print("INV Curr: " + inv_ac_current_usage + " A    ", marginLeft, 40);
-            myGLCD.print("INV Power: " + inv_ac_active_power + " W  ", marginLeft, 60);
-            myGLCD.print("INV Energy: " + inv_ac_active_energy + " KWh  ", marginLeft, 80);
-            myGLCD.print("INV PF: " + inv_ac_pf + " FQ:" + inv_ac_frequency + "Hz ", marginLeft, 100);
+            myGLCD.print("INV Volt: " + String(solarInverter.voltage, 0) + " V     ", marginLeft, 20);
+            myGLCD.print("INV Curr: " + String(solarInverter.current, 2) + " A    ", marginLeft, 40);
+            myGLCD.print("INV Power: " + String(solarInverter.power, 0) + " W  ", marginLeft, 60);
+            myGLCD.print("INV Energy: " + String(solarInverter.energy, 1) + " KWh  ", marginLeft, 80);
+            myGLCD.print("INV PF: " + String(solarInverter.pf, 1) + " FQ:" + String(solarInverter.frequency, 1) + "Hz ", marginLeft, 100);
         }
 
         myGLCD.setColor(255, 105, 180);
-        if (dc_voltage_usage != "0") {
-            myGLCD.print("PV Volt: " + dc_voltage_usage + " V      ", marginLeft, 120);
-            myGLCD.print("PV Current: " + dc_current_usage + " A  ", marginLeft, 140);
-            myGLCD.print("PV Power: " + dc_active_power + " W   ", marginLeft, 160);
+        if (solarDCmeter.voltage > 0) {
+            myGLCD.print("PV Volt: " + String(solarDCmeter.voltage, 0) + " V      ", marginLeft, 120);
+            myGLCD.print("PV Current: " + String(solarDCmeter.current, 1) + " A  ", marginLeft, 140);
+            myGLCD.print("PV Power: " + String(solarDCmeter.power, 0) + " W   ", marginLeft, 160);
         }
 
-        if (dc_voltage_usage == "0" && inv_ac_voltage_usage == "0") {
+        if (solarDCmeter.voltage > 0 && solarInverter.voltage == 0) {
             myGLCD.setColor(255, 255, 0);
             myGLCD.print(" (BackUp) ", marginLeft + 25, 1);
             myGLCD.print("Voltage: " + String(powerBackup.voltage, 0) + " V     ", marginLeft, 20);
@@ -183,7 +178,7 @@ void displayPzemSensor(String dc_voltage_usage, String dc_current_usage, String 
         myGLCD.print("Energy: " + String(mainPower.energy) + " KWh    ", marginLeftSeconds, 80);
         myGLCD.print("PF: " + String(mainPower.pf) + " FQC: " + String(mainPower.frequency) + " Hz ", marginLeftSeconds, 100);
 
-        if (dc_voltage_usage != "0") {
+        if (solarDCmeter.voltage > 0) {
             if (powerBackup.power >= 10)
                 myGLCD.setColor(RED);
             else
